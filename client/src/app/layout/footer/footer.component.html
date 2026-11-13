@@ -1,0 +1,85 @@
+<footer class="mt-16 bg-ink-900 text-ink-300">
+  <!-- Newsletter -->
+  <div class="border-b border-white/10">
+    <div class="page flex flex-col gap-5 py-8 md:flex-row md:items-center md:justify-between">
+      <div>
+        <p class="text-lg font-bold text-white">Get deals before everyone else</p>
+        <p class="mt-1 text-sm text-ink-400">Flash sales, new arrivals and seller offers — once a week, no spam.</p>
+      </div>
+      <form class="flex w-full max-w-md gap-2" (submit)="subscribe($event)">
+        <input
+          type="email"
+          class="w-full rounded-lg border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-white outline-none placeholder:text-ink-500 focus:border-brand-400"
+          placeholder="you@example.com"
+          [value]="email()"
+          (input)="email.set($any($event.target).value)"
+          aria-label="Email address"
+        />
+        <button type="submit" class="btn-primary shrink-0">Subscribe</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="page grid grid-cols-2 gap-8 py-12 md:grid-cols-4">
+    <div class="col-span-2 md:col-span-1">
+      <img src="/images/logo.png" alt="Skinet" class="h-10 w-auto brightness-0 invert" />
+      <p class="mt-4 max-w-xs text-sm leading-relaxed text-ink-400">
+        The marketplace for snow sports gear. Shop boards, boots, gloves and accessories from verified sellers.
+      </p>
+      <div class="mt-5 flex gap-2">
+        <span class="grid h-9 w-9 place-items-center rounded-lg bg-white/5 text-ink-300 transition hover:bg-white/10">
+          <span class="material-icons text-[18px]">public</span>
+        </span>
+        <span class="grid h-9 w-9 place-items-center rounded-lg bg-white/5 text-ink-300 transition hover:bg-white/10">
+          <span class="material-icons text-[18px]">photo_camera</span>
+        </span>
+        <span class="grid h-9 w-9 place-items-center rounded-lg bg-white/5 text-ink-300 transition hover:bg-white/10">
+          <span class="material-icons text-[18px]">alternate_email</span>
+        </span>
+      </div>
+    </div>
+
+    <div>
+      <p class="mb-3 text-xs font-bold uppercase tracking-wider text-white">Shop</p>
+      <ul class="space-y-2 text-sm">
+        <li><a routerLink="/catalog" class="transition hover:text-white">All products</a></li>
+        <li><a routerLink="/catalog" [queryParams]="{ category: 'boards' }" class="transition hover:text-white">Snowboards</a></li>
+        <li><a routerLink="/catalog" [queryParams]="{ category: 'boots' }" class="transition hover:text-white">Boots</a></li>
+        <li><a routerLink="/catalog" [queryParams]="{ category: 'gloves' }" class="transition hover:text-white">Gloves</a></li>
+        <li><a routerLink="/catalog" [queryParams]="{ deals: 'true' }" class="transition hover:text-white">Flash deals</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="mb-3 text-xs font-bold uppercase tracking-wider text-white">Sell</p>
+      <ul class="space-y-2 text-sm">
+        <li><a routerLink="/seller/register" class="transition hover:text-white">Become a seller</a></li>
+        <li><a routerLink="/seller" class="transition hover:text-white">Seller center</a></li>
+        <li><a routerLink="/seller/register" class="transition hover:text-white">Create a store</a></li>
+        <li><a routerLink="/login" class="transition hover:text-white">Seller sign in</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="mb-3 text-xs font-bold uppercase tracking-wider text-white">Support</p>
+      <ul class="space-y-2 text-sm">
+        <li><a routerLink="/orders" class="transition hover:text-white">Track my order</a></li>
+        <li><a routerLink="/cart" class="transition hover:text-white">Shopping cart</a></li>
+        <li><a routerLink="/wishlist" class="transition hover:text-white">Wishlist</a></li>
+        <li><a routerLink="/catalog" class="transition hover:text-white">Returns &amp; refunds</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div class="page flex flex-col items-center justify-between gap-4 py-5 text-xs text-ink-500 sm:flex-row">
+      <p>© {{ year }} Skinet. All rights reserved. A project by HamzaHexcoder5.</p>
+      <div class="flex items-center gap-2">
+        <span class="rounded border border-white/10 px-2 py-1">VISA</span>
+        <span class="rounded border border-white/10 px-2 py-1">Mastercard</span>
+        <span class="rounded border border-white/10 px-2 py-1">Stripe</span>
+        <span class="rounded border border-white/10 px-2 py-1">Cash on delivery</span>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,239 @@
+<section class="page mt-4">
+  <div class="grid gap-4 lg:grid-cols-[1fr_300px]">
+    <!-- Hero slider -->
+    <div class="relative h-[260px] overflow-hidden rounded-2xl bg-ink-900 sm:h-[340px] lg:h-[400px]">
+      @for (slide of slides; track slide.title; let i = $index) {
+        <div
+          class="absolute inset-0 transition-opacity duration-700"
+          [class.opacity-0]="activeSlide() !== i"
+          [class.pointer-events-none]="activeSlide() !== i"
+        >
+          <img [src]="slide.image" [alt]="slide.title" class="h-full w-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-r from-ink-900/85 via-ink-900/55 to-transparent"></div>
+          <div class="absolute inset-0 flex flex-col justify-center gap-3 p-6 sm:p-10">
+            <span class="w-fit rounded-full bg-brand-500/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white">
+              {{ slide.eyebrow }}
+            </span>
+            <h1 class="max-w-lg text-2xl font-extrabold leading-tight text-white sm:text-4xl">
+              {{ slide.title }}
+            </h1>
+            <p class="max-w-md text-sm text-white/80 sm:text-base">{{ slide.subtitle }}</p>
+            <a
+              [routerLink]="slide.link"
+              [queryParams]="slide.query ?? {}"
+              class="mt-2 w-fit rounded-lg bg-white px-5 py-2.5 text-sm font-bold text-ink-900 transition hover:bg-brand-500 hover:text-white"
+            >
+              {{ slide.cta }}
+            </a>
+          </div>
+        </div>
+      }
+
+      <div class="absolute bottom-4 left-6 flex gap-1.5 sm:left-10">
+        @for (slide of slides; track slide.title; let i = $index) {
+          <button
+            type="button"
+            class="h-1.5 rounded-full bg-white transition-all"
+            [class.w-7]="activeSlide() === i"
+            [class.w-3]="activeSlide() !== i"
+            [style.opacity]="activeSlide() === i ? 1 : 0.45"
+            (click)="goToSlide(i)"
+            [attr.aria-label]="'Go to slide ' + (i + 1)"
+          ></button>
+        }
+      </div>
+    </div>
+
+    <!-- Side promos -->
+    <div class="hidden gap-4 lg:grid lg:grid-rows-2">
+      <a
+        routerLink="/catalog"
+        [queryParams]="{ deals: 'true' }"
+        class="group relative overflow-hidden rounded-2xl bg-brand-500 p-5 text-white"
+      >
+        <p class="text-xs font-bold uppercase tracking-wider text-white/80">Today only</p>
+        <p class="mt-2 text-xl font-extrabold leading-snug">Up to 30% off<br />winter gear</p>
+        <span class="mt-3 inline-flex items-center gap-1 text-sm font-semibold">
+          Shop deals
+          <span class="material-icons text-[16px] transition group-hover:translate-x-1">arrow_forward</span>
+        </span>
+        <span class="material-icons absolute -bottom-4 -right-2 text-[110px] text-white/10">percent</span>
+      </a>
+
+      <a routerLink="/seller/register" class="group relative overflow-hidden rounded-2xl bg-ink-900 p-5 text-white">
+        <p class="text-xs font-bold uppercase tracking-wider text-white/70">Sell on Skinet</p>
+        <p class="mt-2 text-xl font-extrabold leading-snug">Open your store<br />in minutes</p>
+        <span class="mt-3 inline-flex items-center gap-1 text-sm font-semibold">
+          Get started
+          <span class="material-icons text-[16px] transition group-hover:translate-x-1">arrow_forward</span>
+        </span>
+        <span class="material-icons absolute -bottom-3 -right-1 text-[100px] text-white/10">storefront</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Trust strip -->
+<section class="page mt-5">
+  <div class="grid grid-cols-2 gap-3 rounded-2xl border border-ink-100 bg-white p-3 md:grid-cols-4">
+    @for (item of [
+      { icon: 'local_shipping', title: 'Free delivery', text: 'On orders over $120' },
+      { icon: 'verified_user', title: 'Buyer protection', text: 'Full refund if not as described' },
+      { icon: 'sync', title: '7-day returns', text: 'No questions asked' },
+      { icon: 'support_agent', title: 'Support 24/7', text: 'Chat with a real person' }
+    ]; track item.title) {
+      <div class="flex items-center gap-3 rounded-xl p-2">
+        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand-50 text-brand-600">
+          <span class="material-icons text-[20px]">{{ item.icon }}</span>
+        </span>
+        <div class="min-w-0">
+          <p class="text-[13px] font-semibold leading-tight text-ink-900">{{ item.title }}</p>
+          <p class="text-[11px] leading-snug text-ink-500">{{ item.text }}</p>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Categories -->
+<section class="page mt-8">
+  <div class="mb-4 flex items-end justify-between">
+    <div>
+      <h2 class="section-title">Shop by category</h2>
+      <p class="mt-0.5 text-sm text-ink-500">Everything you need for the season</p>
+    </div>
+    <a routerLink="/catalog" class="link-muted hidden sm:inline-flex">View all</a>
+  </div>
+
+  <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+    @for (category of categories(); track category.id) {
+      <a
+        [routerLink]="['/catalog']"
+        [queryParams]="{ category: category.slug }"
+        class="group flex items-center gap-3 rounded-xl border border-ink-100 bg-white p-3 transition hover:border-brand-200 hover:shadow-card"
+      >
+        <span class="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-lg bg-ink-50">
+          <img [src]="category.image" [alt]="category.name" class="h-full w-full object-cover transition group-hover:scale-110" />
+        </span>
+        <span class="min-w-0">
+          <span class="block truncate text-sm font-semibold text-ink-900">{{ category.name }}</span>
+          <span class="block truncate text-xs text-ink-500">{{ category.count }} products</span>
+        </span>
+      </a>
+    }
+  </div>
+</section>
+
+<!-- Flash deals -->
+<section class="page mt-10">
+  <div class="overflow-hidden rounded-2xl bg-white shadow-card">
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-ink-100 px-4 py-3.5">
+      <div class="flex items-center gap-3">
+        <h2 class="flex items-center gap-1.5 text-lg font-extrabold text-ink-900">
+          <span class="material-icons text-brand-500">bolt</span>
+          Flash deals
+        </h2>
+        <div class="flex items-center gap-1">
+          @for (unit of [countdown().hours, countdown().minutes, countdown().seconds]; track $index) {
+            <span class="rounded bg-ink-900 px-1.5 py-1 text-xs font-bold tabular-nums text-white">{{ unit }}</span>
+            @if ($index < 2) {
+              <span class="text-xs font-bold text-ink-400">:</span>
+            }
+          }
+        </div>
+      </div>
+      <a routerLink="/catalog" [queryParams]="{ deals: 'true' }" class="link-muted inline-flex items-center gap-1">
+        See all
+        <span class="material-icons text-[16px]">chevron_right</span>
+      </a>
+    </div>
+
+    <div class="flex gap-3 overflow-x-auto p-4 no-scrollbar">
+      @for (product of deals(); track product.id) {
+        <div class="w-[168px] shrink-0 sm:w-[190px]">
+          <app-product-card [product]="product" />
+        </div>
+      }
+      @if (deals().length === 0) {
+        @for (placeholder of [1, 2, 3, 4, 5]; track placeholder) {
+          <div class="w-[168px] shrink-0 sm:w-[190px]">
+            <div class="skeleton aspect-square rounded-xl"></div>
+            <div class="skeleton mt-2 h-3 w-4/5 rounded"></div>
+            <div class="skeleton mt-2 h-3 w-2/5 rounded"></div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Trending -->
+<section class="page mt-10">
+  <div class="mb-4 flex items-end justify-between">
+    <div>
+      <h2 class="section-title">Trending right now</h2>
+      <p class="mt-0.5 text-sm text-ink-500">Most ordered by riders this week</p>
+    </div>
+    <a routerLink="/catalog" class="link-muted inline-flex items-center gap-1">
+      Browse all
+      <span class="material-icons text-[16px]">chevron_right</span>
+    </a>
+  </div>
+
+  <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+    @for (product of trending(); track product.id) {
+      <app-product-card [product]="product" />
+    }
+    @if (loading()) {
+      @for (placeholder of [1, 2, 3, 4, 5, 6, 7, 8]; track placeholder) {
+        <div class="overflow-hidden rounded-xl border border-ink-100 bg-white">
+          <div class="skeleton aspect-square"></div>
+          <div class="space-y-2 p-3">
+            <div class="skeleton h-3 w-4/5 rounded"></div>
+            <div class="skeleton h-3 w-1/3 rounded"></div>
+            <div class="skeleton h-8 w-full rounded-lg"></div>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</section>
+
+<!-- New arrivals -->
+@if (fresh().length > 0) {
+  <section class="page mt-10">
+    <div class="mb-4 flex items-end justify-between">
+      <div>
+        <h2 class="section-title">New arrivals</h2>
+        <p class="mt-0.5 text-sm text-ink-500">Fresh stock from our sellers</p>
+      </div>
+      <a routerLink="/catalog" [queryParams]="{ sort: 'newest' }" class="link-muted inline-flex items-center gap-1">
+        See what's new
+        <span class="material-icons text-[16px]">chevron_right</span>
+      </a>
+    </div>
+    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+      @for (product of fresh(); track product.id) {
+        <app-product-card [product]="product" />
+      }
+    </div>
+  </section>
+}
+
+<!-- Seller CTA -->
+<section class="page mt-12">
+  <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-ink-900 to-ink-800 px-6 py-10 sm:px-10">
+    <div class="relative z-10 max-w-xl">
+      <span class="chip bg-white/10 text-white/80">For sellers</span>
+      <h2 class="mt-3 text-2xl font-extrabold text-white sm:text-3xl">Turn your gear into a storefront</h2>
+      <p class="mt-2 text-sm text-white/70 sm:text-base">
+        Create a store, list products in minutes and get paid securely. Free setup and zero listing fees for the first 30 days.
+      </p>
+      <div class="mt-5 flex flex-wrap gap-3">
+        <a routerLink="/seller/register" class="btn-primary">Create your store</a>
+        <a routerLink="/seller" class="btn border border-white/20 text-white hover:bg-white/10">Seller center</a>
+      </div>
+    </div>
+    <span class="material-icons absolute -bottom-6 right-4 text-[180px] text-white/5">storefront</span>
+  </div>
+</section>

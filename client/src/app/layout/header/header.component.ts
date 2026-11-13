@@ -1,47 +1,54 @@
-import { Component, inject } from '@angular/core';
-import { MatBadge } from '@angular/material/badge';
-import { MatButton } from '@angular/material/button';
-import {MatIcon} from '@angular/material/icon';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { BusyService } from '../../core/services/busy.service';
-import { MatProgressBar } from '@angular/material/progress-bar';
-import { CartService } from '../../core/services/cart.service';
-import { AccountService } from '../../core/services/account.service';
-import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import { MatDivider } from '@angular/material/divider';
-import { IsAdminDirective } from '../../shared/directives/is-admin.directive';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../core/auth.service';
+import { CartService } from '../../core/cart.service';
+import { CatalogService } from '../../core/catalog.service';
+import { Category } from '../../core/models';
+import { WishlistService } from '../../core/wishlist.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [
-    MatIcon,
-    MatButton,
-    MatBadge,
-    RouterLink,
-    RouterLinkActive,
-    MatProgressBar,
-    MatMenuTrigger,
-    MatMenu,
-    MatDivider,
-    MatMenuItem,
-    IsAdminDirective
-  ],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  imports: [RouterLink],
+  templateUrl: './header.component.html'
 })
 export class HeaderComponent {
-  busyService = inject(BusyService);
-  cartService = inject(CartService);
-  accountService = inject(AccountService);
   private router = inject(Router);
+  private catalog = inject(CatalogService);
+  readonly cart = inject(CartService);
+  readonly auth = inject(AuthService);
+  readonly wishlist = inject(WishlistService);
+
+  readonly categories = signal<Category[]>([]);
+  readonly term = signal('');
+  readonly scope = signal('all');
+  readonly mobileOpen = signal(false);
+  readonly accountOpen = signal(false);
+
+  constructor() {
+    this.catalog.getCategories().subscribe({
+      next: (categories) => this.categories.set(categories),
+      error: () => this.categories.set([])
+    });
+  }
+
+  search(event?: Event) {
+    event?.preventDefault();
+    const query: Record<string, string> = {};
+    if (this.term().trim()) query['q'] = this.term().trim();
+    if (this.scope() !== 'all') query['category'] = this.scope();
+    this.mobileOpen.set(false);
+    this.router.navigate(['/catalog'], { queryParams: query });
+  }
 
   logout() {
-    this.accountService.logout().subscribe({
-      next: () => {
-        this.accountService.currentUser.set(null);
-        this.router.navigateByUrl('/');
-      }
-    })
+    this.auth.logout();
+    this.accountOpen.set(false);
+    this.router.navigateByUrl('/');
+  }
+
+  closeMenus() {
+    this.mobileOpen.set(false);
+    this.accountOpen.set(false);
   }
 }

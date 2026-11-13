@@ -1,0 +1,218 @@
+@if (placedOrder(); as order) {
+  <section class="page py-12">
+    <div class="mx-auto max-w-2xl rounded-2xl border border-ink-100 bg-white p-6 text-center sm:p-10">
+      <span class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-50 text-emerald-600">
+        <span class="material-icons text-[34px]">check_circle</span>
+      </span>
+      <h1 class="mt-4 text-2xl font-extrabold text-ink-900">Order placed successfully</h1>
+      <p class="mt-2 text-sm text-ink-500">
+        Thank you! Your order <span class="font-semibold text-ink-800">{{ order.id }}</span> is being prepared.
+      </p>
+
+      <div class="mt-6 space-y-2 rounded-xl bg-ink-50 p-4 text-left text-sm">
+        @for (item of order.items; track item.productId) {
+          <div class="flex items-center justify-between gap-3">
+            <span class="min-w-0 truncate text-ink-700">{{ item.quantity }} × {{ item.name }}</span>
+            <span class="shrink-0 font-medium text-ink-800">${{ (item.price * item.quantity).toFixed(2) }}</span>
+          </div>
+        }
+        <div class="flex justify-between border-t border-ink-200 pt-2 text-base font-bold text-ink-900">
+          <span>Total paid</span>
+          <span>${{ order.total.toFixed(2) }}</span>
+        </div>
+        <p class="pt-1 text-xs text-ink-500">Payment method: {{ order.paymentMethod }} · Status: {{ order.status }}</p>
+      </div>
+
+      <div class="mt-6 flex flex-wrap justify-center gap-2">
+        <a routerLink="/orders" class="btn-primary">Track my order</a>
+        <button type="button" class="btn-outline" (click)="continueShopping()">Continue shopping</button>
+      </div>
+    </div>
+  </section>
+} @else if (cart.cart().items.length === 0) {
+  <section class="page py-20 text-center">
+    <span class="material-icons text-[56px] text-ink-300">shopping_bag</span>
+    <h1 class="mt-4 text-2xl font-bold text-ink-900">Nothing to check out</h1>
+    <p class="mt-2 text-sm text-ink-500">Your cart is empty. Add a product first.</p>
+    <a routerLink="/catalog" class="btn-primary mt-6">Go to shop</a>
+  </section>
+} @else {
+  <section class="page pt-4">
+    <nav class="mb-4 flex items-center gap-1.5 text-xs text-ink-500">
+      <a routerLink="/cart" class="transition hover:text-brand-600">Cart</a>
+      <span class="material-icons text-[14px]">chevron_right</span>
+      <span class="font-medium text-ink-700">Checkout</span>
+    </nav>
+
+    <h1 class="mb-5 text-2xl font-extrabold text-ink-900">Checkout</h1>
+
+    <div class="grid gap-6 lg:grid-cols-[1fr_360px]">
+      <div class="space-y-4">
+        <!-- Address -->
+        <div class="rounded-xl border border-ink-100 bg-white p-5">
+          <div class="mb-4 flex items-center gap-2">
+            <span class="grid h-6 w-6 place-items-center rounded-full bg-brand-500 text-xs font-bold text-white">1</span>
+            <h2 class="text-base font-bold text-ink-900">Delivery address</h2>
+          </div>
+
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label class="label" for="fullName">Full name</label>
+              <input id="fullName" class="input" placeholder="Your name" [value]="address().fullName" (input)="update('fullName', $any($event.target).value)" />
+            </div>
+            <div>
+              <label class="label" for="phone">Phone number</label>
+              <input id="phone" class="input" placeholder="03xx xxxxxxx" [value]="address().phone" (input)="update('phone', $any($event.target).value)" />
+            </div>
+            <div>
+              <label class="label" for="city">City</label>
+              <input id="city" class="input" placeholder="Lahore" [value]="address().city" (input)="update('city', $any($event.target).value)" />
+            </div>
+            <div>
+              <label class="label" for="area">Area</label>
+              <input id="area" class="input" placeholder="DHA Phase 5" [value]="address().area" (input)="update('area', $any($event.target).value)" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="label" for="street">Street address</label>
+              <input id="street" class="input" placeholder="House, street, landmark" [value]="address().street" (input)="update('street', $any($event.target).value)" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="label" for="notes">Delivery notes (optional)</label>
+              <input id="notes" class="input" placeholder="Call before delivery" [value]="address().notes" (input)="update('notes', $any($event.target).value)" />
+            </div>
+          </div>
+
+          @if (errors().length > 0) {
+            <p class="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-red-600">
+              Missing: {{ errors().join(', ') }}
+            </p>
+          }
+        </div>
+
+        <!-- Delivery -->
+        <div class="rounded-xl border border-ink-100 bg-white p-5">
+          <div class="mb-4 flex items-center gap-2">
+            <span class="grid h-6 w-6 place-items-center rounded-full bg-brand-500 text-xs font-bold text-white">2</span>
+            <h2 class="text-base font-bold text-ink-900">Delivery method</h2>
+          </div>
+
+          <div class="space-y-2">
+            <label class="flex cursor-pointer items-center justify-between gap-3 rounded-lg border p-3.5 transition"
+              [class.border-brand-500]="delivery() === 'standard'"
+              [class.bg-brand-50]="delivery() === 'standard'"
+              [class.border-ink-200]="delivery() !== 'standard'">
+              <span class="flex items-center gap-3">
+                <input type="radio" name="delivery" class="h-4 w-4 text-brand-500" [checked]="delivery() === 'standard'" (change)="delivery.set('standard')" />
+                <span>
+                  <span class="block text-sm font-semibold text-ink-900">Standard delivery</span>
+                  <span class="block text-xs text-ink-500">3 – 5 working days</span>
+                </span>
+              </span>
+              <span class="text-sm font-semibold" [class.text-emerald-600]="cart.shipping() === 0">
+                {{ cart.shipping() === 0 ? 'Free' : '$' + cart.shipping().toFixed(2) }}
+              </span>
+            </label>
+
+            <label class="flex cursor-pointer items-center justify-between gap-3 rounded-lg border p-3.5 transition"
+              [class.border-brand-500]="delivery() === 'express'"
+              [class.bg-brand-50]="delivery() === 'express'"
+              [class.border-ink-200]="delivery() !== 'express'">
+              <span class="flex items-center gap-3">
+                <input type="radio" name="delivery" class="h-4 w-4 text-brand-500" [checked]="delivery() === 'express'" (change)="delivery.set('express')" />
+                <span>
+                  <span class="block text-sm font-semibold text-ink-900">Express delivery</span>
+                  <span class="block text-xs text-ink-500">Next working day</span>
+                </span>
+              </span>
+              <span class="text-sm font-semibold text-ink-800">${{ expressFee.toFixed(2) }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Payment -->
+        <div class="rounded-xl border border-ink-100 bg-white p-5">
+          <div class="mb-4 flex items-center gap-2">
+            <span class="grid h-6 w-6 place-items-center rounded-full bg-brand-500 text-xs font-bold text-white">3</span>
+            <h2 class="text-base font-bold text-ink-900">Payment method</h2>
+          </div>
+
+          <div class="space-y-2">
+            <label class="flex cursor-pointer items-center gap-3 rounded-lg border p-3.5 transition"
+              [class.border-brand-500]="payment() === 'cod'"
+              [class.bg-brand-50]="payment() === 'cod'"
+              [class.border-ink-200]="payment() !== 'cod'">
+              <input type="radio" name="payment" class="h-4 w-4 text-brand-500" [checked]="payment() === 'cod'" (change)="payment.set('cod')" />
+              <span class="material-icons text-[20px] text-ink-500">payments</span>
+              <span>
+                <span class="block text-sm font-semibold text-ink-900">Cash on delivery</span>
+                <span class="block text-xs text-ink-500">Pay the rider when your order arrives</span>
+              </span>
+            </label>
+
+            <label class="flex cursor-pointer items-center gap-3 rounded-lg border p-3.5 transition"
+              [class.border-brand-500]="payment() === 'card'"
+              [class.bg-brand-50]="payment() === 'card'"
+              [class.border-ink-200]="payment() !== 'card'">
+              <input type="radio" name="payment" class="h-4 w-4 text-brand-500" [checked]="payment() === 'card'" (change)="payment.set('card')" />
+              <span class="material-icons text-[20px] text-ink-500">credit_card</span>
+              <span>
+                <span class="block text-sm font-semibold text-ink-900">Card payment</span>
+                <span class="block text-xs text-ink-500">Demo mode — no real charge is made</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <aside>
+        <div class="sticky top-40 rounded-xl border border-ink-100 bg-white p-4">
+          <p class="mb-3 text-sm font-bold text-ink-900">Order summary</p>
+
+          <div class="mb-3 max-h-52 space-y-2 overflow-y-auto pr-1">
+            @for (item of cart.cart().items; track item.productId) {
+              <div class="flex items-center gap-2">
+                <img [src]="item.pictureUrl" [alt]="item.name" class="h-10 w-10 rounded object-cover" />
+                <div class="min-w-0 flex-1">
+                  <p class="truncate text-xs font-medium text-ink-800">{{ item.name }}</p>
+                  <p class="text-[11px] text-ink-500">Qty {{ item.quantity }}</p>
+                </div>
+                <p class="text-xs font-semibold text-ink-800">${{ (item.price * item.quantity).toFixed(2) }}</p>
+              </div>
+            }
+          </div>
+
+          <div class="space-y-2 border-t border-ink-100 pt-3 text-sm">
+            <div class="flex justify-between text-ink-600">
+              <span>Subtotal</span>
+              <span class="font-medium text-ink-800">${{ cart.subtotal().toFixed(2) }}</span>
+            </div>
+            <div class="flex justify-between text-ink-600">
+              <span>Delivery</span>
+              <span class="font-medium" [class.text-emerald-600]="shippingFee === 0">{{ shippingFee === 0 ? 'Free' : '$' + shippingFee.toFixed(2) }}</span>
+            </div>
+            @if (cart.discount() > 0) {
+              <div class="flex justify-between text-emerald-600">
+                <span>Discount</span>
+                <span class="font-medium">-${{ cart.discount().toFixed(2) }}</span>
+              </div>
+            }
+            <div class="flex justify-between border-t border-ink-100 pt-2 text-base font-bold text-ink-900">
+              <span>Total</span>
+              <span>${{ total.toFixed(2) }}</span>
+            </div>
+          </div>
+
+          <button type="button" class="btn-primary mt-4 w-full py-3" [disabled]="placing()" (click)="placeOrder()">
+            @if (placing()) {
+              Placing order…
+            } @else {
+              Place order · ${{ total.toFixed(2) }}
+            }
+          </button>
+          <p class="mt-2 text-center text-[11px] text-ink-400">By placing this order you agree to the Skinet terms.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+}

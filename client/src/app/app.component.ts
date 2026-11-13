@@ -1,15 +1,15 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from "./layout/header/header.component";
-import { ShopComponent } from "./features/shop/shop.component";
+import { Component, OnInit } from '@angular/core';
+import { ShellComponent } from './layout/shell/shell.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, ShopComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  imports: [ShellComponent],
+  template: '<app-shell />'
 })
-export class AppComponent {
-  title = 'Skinet';
+export class AppComponent implements OnInit {
+  ngOnInit() {
+    // The splash lives in index.html and is removed once the shell has rendered.
+    setTimeout(() => document.getElementById('initial-splash')?.remove(), 120);
+  }
 }

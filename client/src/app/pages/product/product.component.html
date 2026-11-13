@@ -1,0 +1,261 @@
+@if (loading()) {
+  <section class="page pt-4">
+    <div class="grid gap-8 lg:grid-cols-2">
+      <div class="skeleton aspect-square rounded-2xl"></div>
+      <div class="space-y-4">
+        <div class="skeleton h-4 w-1/4 rounded"></div>
+        <div class="skeleton h-8 w-3/4 rounded"></div>
+        <div class="skeleton h-4 w-1/3 rounded"></div>
+        <div class="skeleton h-10 w-1/2 rounded"></div>
+        <div class="skeleton h-24 w-full rounded"></div>
+        <div class="skeleton h-12 w-full rounded-lg"></div>
+      </div>
+    </div>
+  </section>
+} @else if (notFound() || !product()) {
+  <section class="page py-24 text-center">
+    <span class="material-icons text-[56px] text-ink-300">inventory_2</span>
+    <h1 class="mt-4 text-2xl font-bold text-ink-900">Product not found</h1>
+    <p class="mt-2 text-sm text-ink-500">This item may have been removed by the seller.</p>
+    <a routerLink="/catalog" class="btn-primary mt-6">Back to shop</a>
+  </section>
+} @else {
+  <section class="page pt-4">
+    <nav class="mb-4 flex flex-wrap items-center gap-1.5 text-xs text-ink-500">
+      <a routerLink="/" class="transition hover:text-brand-600">Home</a>
+      <span class="material-icons text-[14px]">chevron_right</span>
+      <a routerLink="/catalog" class="transition hover:text-brand-600">Shop</a>
+      <span class="material-icons text-[14px]">chevron_right</span>
+      <a [routerLink]="['/catalog']" [queryParams]="{ category: product()!.category }" class="transition hover:text-brand-600">
+        {{ product()!.type }}
+      </a>
+      <span class="material-icons text-[14px]">chevron_right</span>
+      <span class="max-w-[220px] truncate font-medium text-ink-700">{{ product()!.name }}</span>
+    </nav>
+
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px] lg:gap-10">
+      <!-- Gallery -->
+      <div>
+        <div class="relative overflow-hidden rounded-2xl border border-ink-100 bg-white">
+          @if (product()!.discountPercent > 0) {
+            <span class="absolute left-4 top-4 z-10 rounded-md bg-brand-500 px-2.5 py-1 text-xs font-bold text-white">
+              -{{ product()!.discountPercent }}% today
+            </span>
+          }
+          <img [src]="product()!.pictureUrl" [alt]="product()!.name" class="h-[340px] w-full object-contain p-3 sm:h-[500px]" />
+        </div>
+
+        <div class="mt-3 grid grid-cols-3 gap-3">
+          @for (item of [
+            { icon: 'verified', text: 'Genuine product' },
+            { icon: 'local_shipping', text: 'Ships in 24h' },
+            { icon: 'assignment_return', text: '7-day returns' }
+          ]; track item.text) {
+            <div class="flex flex-col items-center gap-1.5 rounded-xl border border-ink-100 bg-white py-3 text-center">
+              <span class="material-icons text-[20px] text-brand-500">{{ item.icon }}</span>
+              <span class="text-[11px] font-medium text-ink-600">{{ item.text }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Buy box -->
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="chip">{{ product()!.brand }}</span>
+          @if (product()!.freeShipping) {
+            <span class="chip bg-emerald-50 text-emerald-700">Free delivery</span>
+          }
+        </div>
+
+        <h1 class="mt-2 text-xl font-bold leading-snug text-ink-900 sm:text-2xl">{{ product()!.name }}</h1>
+
+        <div class="mt-2 flex flex-wrap items-center gap-3 text-sm">
+          <div class="flex items-center gap-1">
+            <span class="material-icons text-[16px] text-amber-400">star</span>
+            <span class="font-semibold text-ink-800">{{ product()!.rating.toFixed(1) }}</span>
+            <span class="text-ink-400">({{ product()!.ratingCount }} ratings)</span>
+          </div>
+          <span class="h-3 w-px bg-ink-200"></span>
+          <span class="text-ink-500">{{ product()!.sold }}+ sold</span>
+        </div>
+
+        <div class="mt-4 rounded-xl bg-brand-50 p-4">
+          <div class="flex flex-wrap items-baseline gap-2">
+            <span class="text-3xl font-extrabold text-brand-600">${{ product()!.price.toFixed(2) }}</span>
+            @if (product()!.oldPrice) {
+              <span class="text-sm text-ink-400 line-through">${{ product()!.oldPrice!.toFixed(2) }}</span>
+              <span class="rounded bg-brand-500 px-1.5 py-0.5 text-[11px] font-bold text-white">
+                Save {{ product()!.discountPercent }}%
+              </span>
+            }
+          </div>
+          <p class="mt-1 text-xs text-ink-500">Inclusive of all taxes · Cash on delivery available</p>
+        </div>
+
+        <p class="mt-4 text-sm leading-relaxed text-ink-600 line-2">{{ product()!.description }}</p>
+
+        <div class="mt-5 flex items-center gap-3">
+          <div class="flex items-center rounded-lg border border-ink-200 bg-white">
+            <button type="button" class="grid h-10 w-10 place-items-center text-ink-600 hover:bg-ink-50" (click)="decrement()" aria-label="Decrease quantity">
+              <span class="material-icons text-[18px]">remove</span>
+            </button>
+            <span class="w-10 text-center text-sm font-semibold">{{ quantity() }}</span>
+            <button type="button" class="grid h-10 w-10 place-items-center text-ink-600 hover:bg-ink-50" (click)="increment()" aria-label="Increase quantity">
+              <span class="material-icons text-[18px]">add</span>
+            </button>
+          </div>
+          <span class="text-xs text-ink-500">
+            @if (product()!.quantityInStock > 10) {
+              In stock
+            } @else if (product()!.quantityInStock > 0) {
+              Only {{ product()!.quantityInStock }} left
+            } @else {
+              Out of stock
+            }
+          </span>
+        </div>
+
+        <div class="mt-4 flex gap-2">
+          <button type="button" class="btn-primary flex-1 py-3" (click)="addToCart()" [disabled]="product()!.quantityInStock === 0">
+            <span class="material-icons text-[18px]">add_shopping_cart</span>
+            Add to cart
+          </button>
+          <button type="button" class="btn-dark flex-1 py-3" (click)="buyNow()" [disabled]="product()!.quantityInStock === 0">
+            Buy now
+          </button>
+          <button
+            type="button"
+            class="grid h-12 w-12 shrink-0 place-items-center rounded-lg border border-ink-200 bg-white text-ink-500 transition hover:text-brand-500"
+            [class.text-brand-500]="wishlist.has(product()!.id)"
+            (click)="toggleWishlist()"
+            aria-label="Toggle wishlist"
+          >
+            <span class="material-icons">{{ wishlist.has(product()!.id) ? 'favorite' : 'favorite_border' }}</span>
+          </button>
+        </div>
+
+        <!-- Seller card -->
+        <div class="mt-5 rounded-xl border border-ink-100 bg-white p-4">
+          <div class="flex items-center justify-between gap-3">
+            <div class="min-w-0">
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-ink-400">Sold by</p>
+              <p class="truncate text-sm font-bold text-ink-900">{{ product()!.sellerName }}</p>
+              <p class="mt-0.5 flex items-center gap-1 text-xs text-ink-500">
+                <span class="material-icons text-[14px] text-amber-400">star</span>
+                4.7 seller rating · ships from Pakistan
+              </p>
+            </div>
+            <a [routerLink]="['/catalog']" [queryParams]="{ brand: product()!.brand }" class="btn-outline shrink-0 text-xs">Visit store</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="mt-10 rounded-2xl border border-ink-100 bg-white">
+      <div class="flex gap-1 border-b border-ink-100 px-2 pt-2">
+        @for (item of [
+          { key: 'description', label: 'Description' },
+          { key: 'specs', label: 'Specifications' },
+          { key: 'reviews', label: 'Reviews' }
+        ]; track item.key) {
+          <button
+            type="button"
+            class="rounded-t-lg px-4 py-2.5 text-sm font-semibold transition"
+            [class.text-brand-600]="tab() === item.key"
+            [class.border-b-2]="tab() === item.key"
+            [class.border-brand-500]="tab() === item.key"
+            [class.text-ink-500]="tab() !== item.key"
+            (click)="tab.set($any(item.key))"
+          >
+            {{ item.label }}
+          </button>
+        }
+      </div>
+
+      <div class="p-5">
+        @switch (tab()) {
+          @case ('description') {
+            <p class="text-sm leading-relaxed text-ink-600">{{ product()!.description }}</p>
+            <p class="mt-3 text-sm leading-relaxed text-ink-600">
+              Built for cold mornings and long descents. Every item is checked by the seller before dispatch and
+              covered by Skinet buyer protection, so you get exactly what you ordered.
+            </p>
+          }
+          @case ('specs') {
+            <dl class="grid gap-3 sm:grid-cols-2">
+              @for (row of [
+                { label: 'Brand', value: product()!.brand },
+                { label: 'Category', value: product()!.type },
+                { label: 'Seller', value: product()!.sellerName },
+                { label: 'Stock', value: product()!.quantityInStock + ' units' },
+                { label: 'Delivery', value: product()!.freeShipping ? 'Free over $120' : '$7.99 flat rate' },
+                { label: 'Returns', value: '7 days, free pickup' }
+              ]; track row.label) {
+                <div class="flex items-center justify-between gap-4 rounded-lg bg-ink-50 px-3 py-2.5">
+                  <dt class="text-xs font-semibold uppercase tracking-wide text-ink-400">{{ row.label }}</dt>
+                  <dd class="text-sm font-medium text-ink-800">{{ row.value }}</dd>
+                </div>
+              }
+            </dl>
+          }
+          @case ('reviews') {
+            <div class="mb-4 flex items-center gap-4 rounded-xl bg-ink-50 p-4">
+              <div class="text-center">
+                <p class="text-3xl font-extrabold text-ink-900">{{ product()!.rating.toFixed(1) }}</p>
+                <div class="flex justify-center text-amber-400">
+                  @for (star of [1, 2, 3, 4, 5]; track star) {
+                    <span class="material-icons text-[14px]">{{ product()!.rating >= star ? 'star' : 'star_border' }}</span>
+                  }
+                </div>
+                <p class="mt-1 text-xs text-ink-500">{{ product()!.ratingCount }} ratings</p>
+              </div>
+              <p class="text-sm text-ink-600">Buyers rate this item highly for quality and fast delivery.</p>
+            </div>
+
+            <div class="space-y-4">
+              @for (review of reviews; track review.name) {
+                <div class="border-b border-ink-100 pb-4 last:border-0 last:pb-0">
+                  <div class="flex items-center gap-2">
+                    <span class="grid h-8 w-8 place-items-center rounded-full bg-brand-100 text-xs font-bold text-brand-700">
+                      {{ review.name.charAt(0) }}
+                    </span>
+                    <div>
+                      <p class="text-sm font-semibold text-ink-900">{{ review.name }}</p>
+                      <div class="flex items-center gap-1 text-amber-400">
+                        @for (star of [1, 2, 3, 4, 5]; track star) {
+                          <span class="material-icons text-[12px]">{{ review.rating >= star ? 'star' : 'star_border' }}</span>
+                        }
+                        <span class="ml-1 text-[11px] text-ink-400">{{ review.date }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="mt-2 text-sm text-ink-600">{{ review.text }}</p>
+                </div>
+              }
+            </div>
+          }
+        }
+      </div>
+    </div>
+
+    <!-- Related -->
+    @if (related().length > 0) {
+      <div class="mt-10">
+        <div class="mb-4 flex items-end justify-between">
+          <h2 class="section-title">You may also like</h2>
+          <a [routerLink]="['/catalog']" [queryParams]="{ category: product()!.category }" class="link-muted inline-flex items-center gap-1">
+            More in {{ product()!.type }}
+            <span class="material-icons text-[16px]">chevron_right</span>
+          </a>
+        </div>
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          @for (item of related(); track item.id) {
+            <app-product-card [product]="item" />
+          }
+        </div>
+      </div>
+    }
+  </section>
+}
