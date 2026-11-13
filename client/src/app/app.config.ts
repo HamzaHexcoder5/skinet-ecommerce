@@ -11,12 +11,17 @@ import { lastValueFrom } from 'rxjs';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 function initializeApp(initService: InitService) {
-  return () => lastValueFrom(initService.init()).finally(() => {
-    const splash = document.getElementById('initial-splash');
-    if (splash) {
-      splash.remove();
-    }
-  })
+  return () => lastValueFrom(initService.init())
+    .catch(() => {
+      // The app must still boot when the API is unreachable, otherwise the
+      // splash screen is removed and nothing is rendered.
+    })
+    .finally(() => {
+      const splash = document.getElementById('initial-splash');
+      if (splash) {
+        splash.remove();
+      }
+    })
 }
 
 export const appConfig: ApplicationConfig = {
