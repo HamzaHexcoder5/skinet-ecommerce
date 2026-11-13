@@ -35,7 +35,7 @@ jobs:
 
       - name: Build Angular app
         working-directory: client
-        run: npx ng build --configuration production --base-href "/${{ github.event.repository.name }}/" --output-path dist/browser
+        run: npx ng build --configuration production --base-href "/${{ github.event.repository.name }}/" --output-path dist
 
       - name: Add SPA fallback
         run: cp client/dist/browser/index.html client/dist/browser/404.html
