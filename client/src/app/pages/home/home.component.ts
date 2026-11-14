@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit {
 
   readonly slides: Slide[] = [
     {
-      image: '/images/hero1.jpg',
+      image: 'images/hero1.jpg',
       eyebrow: 'Winter season 2026',
       title: 'Gear up for the mountain',
       subtitle: 'Boards, boots and gloves from verified sellers — up to 30% off this week.',
@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit {
       link: '/catalog'
     },
     {
-      image: '/images/hero2.jpg',
+      image: 'images/hero2.jpg',
       eyebrow: 'Flash deals',
       title: 'Prices that drop fast',
       subtitle: 'Limited stock, limited time. New deals unlocked every morning.',
@@ -49,7 +49,7 @@ export class HomeComponent implements OnInit {
       query: { deals: 'true' }
     },
     {
-      image: '/images/hero3.jpg',
+      image: 'images/hero3.jpg',
       eyebrow: 'Become a seller',
       title: 'Open your store today',
       subtitle: 'Reach thousands of riders. Free store setup, zero listing fees for 30 days.',

@@ -24,13 +24,13 @@ export class SellerDashboardComponent implements OnInit {
   readonly errors = signal<Record<string, string>>({});
 
   readonly images = [
-    '/images/products/sb-ang1.png',
-    '/images/products/sb-ang2.png',
-    '/images/products/sb-core1.png',
-    '/images/products/boot-ang1.png',
-    '/images/products/boot-purple1.png',
-    '/images/products/glove-code1.png',
-    '/images/products/hat-core1.png'
+    'images/products/sb-ang1.png',
+    'images/products/sb-ang2.png',
+    'images/products/sb-core1.png',
+    'images/products/boot-ang1.png',
+    'images/products/boot-purple1.png',
+    'images/products/glove-code1.png',
+    'images/products/hat-core1.png'
   ];
 
   readonly categories = ['Boards', 'Boots', 'Gloves', 'Hats'];

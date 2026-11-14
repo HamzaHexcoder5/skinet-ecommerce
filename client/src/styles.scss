@@ -2,14 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Self-hosted icon font: a CDN hiccup must not turn icons into raw ligature text. */
-@font-face {
-  font-family: 'Material Icons';
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  src: url('/fonts/material-icons.woff2') format('woff2');
-}
+/* The Material Icons @font-face lives in index.html so the font URL stays
+   relative to the document base href and works from any sub-path deployment. */
 
 .material-icons {
   font-family: 'Material Icons';

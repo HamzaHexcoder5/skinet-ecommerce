@@ -23,7 +23,7 @@ seedProducts.forEach((product) => {
     price: 320,
     category: 'Boards',
     stock: 12,
-    pictureUrl: '/images/products/sb-ang1.png',
+    pictureUrl: 'images/products/sb-ang1.png',
     brand: 'Skinet'
   },
   {
@@ -33,7 +33,7 @@ seedProducts.forEach((product) => {
     price: 24,
     category: 'Gloves',
     stock: 40,
-    pictureUrl: '/images/products/glove-code1.png',
+    pictureUrl: 'images/products/glove-code1.png',
     brand: 'Skinet'
   },
   {
@@ -43,7 +43,7 @@ seedProducts.forEach((product) => {
     price: 18,
     category: 'Hats',
     stock: 0,
-    pictureUrl: '/images/products/hat-core1.png',
+    pictureUrl: 'images/products/hat-core1.png',
     brand: 'Skinet'
   }
 ].forEach((item) => {

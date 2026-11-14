@@ -7,9 +7,9 @@ module.exports = {
       "price": 200,
       "oldPrice": 224.99,
       "discountPercent": 10,
-      "pictureUrl": "/images/products/sb-ang1.png",
+      "pictureUrl": "images/products/sb-ang1.png",
       "images": [
-        "/images/products/sb-ang1.png"
+        "images/products/sb-ang1.png"
       ],
       "type": "Boards",
       "brand": "Angular",
@@ -29,9 +29,9 @@ module.exports = {
       "price": 150,
       "oldPrice": 179.99,
       "discountPercent": 15,
-      "pictureUrl": "/images/products/sb-ang2.png",
+      "pictureUrl": "images/products/sb-ang2.png",
       "images": [
-        "/images/products/sb-ang2.png"
+        "images/products/sb-ang2.png"
       ],
       "type": "Boards",
       "brand": "Angular",
@@ -51,9 +51,9 @@ module.exports = {
       "price": 180,
       "oldPrice": 224.99,
       "discountPercent": 20,
-      "pictureUrl": "/images/products/sb-core1.png",
+      "pictureUrl": "images/products/sb-core1.png",
       "images": [
-        "/images/products/sb-core1.png"
+        "images/products/sb-core1.png"
       ],
       "type": "Boards",
       "brand": "NetCore",
@@ -73,9 +73,9 @@ module.exports = {
       "price": 300,
       "oldPrice": 399.99,
       "discountPercent": 25,
-      "pictureUrl": "/images/products/sb-core2.png",
+      "pictureUrl": "images/products/sb-core2.png",
       "images": [
-        "/images/products/sb-core2.png"
+        "images/products/sb-core2.png"
       ],
       "type": "Boards",
       "brand": "NetCore",
@@ -95,9 +95,9 @@ module.exports = {
       "price": 250,
       "oldPrice": 359.99,
       "discountPercent": 30,
-      "pictureUrl": "/images/products/sb-react1.png",
+      "pictureUrl": "images/products/sb-react1.png",
       "images": [
-        "/images/products/sb-react1.png"
+        "images/products/sb-react1.png"
       ],
       "type": "Boards",
       "brand": "React",
@@ -117,9 +117,9 @@ module.exports = {
       "price": 120,
       "oldPrice": null,
       "discountPercent": 0,
-      "pictureUrl": "/images/products/sb-ts1.png",
+      "pictureUrl": "images/products/sb-ts1.png",
       "images": [
-        "/images/products/sb-ts1.png"
+        "images/products/sb-ts1.png"
       ],
       "type": "Boards",
       "brand": "Typescript",
@@ -139,9 +139,9 @@ module.exports = {
       "price": 10,
       "oldPrice": 14.99,
       "discountPercent": 10,
-      "pictureUrl": "/images/products/hat-core1.png",
+      "pictureUrl": "images/products/hat-core1.png",
       "images": [
-        "/images/products/hat-core1.png"
+        "images/products/hat-core1.png"
       ],
       "type": "Hats",
       "brand": "NetCore",
@@ -161,9 +161,9 @@ module.exports = {
       "price": 8,
       "oldPrice": 9.99,
       "discountPercent": 15,
-      "pictureUrl": "/images/products/hat-react1.png",
+      "pictureUrl": "images/products/hat-react1.png",
       "images": [
-        "/images/products/hat-react1.png"
+        "images/products/hat-react1.png"
       ],
       "type": "Hats",
       "brand": "React",
@@ -183,9 +183,9 @@ module.exports = {
       "price": 15,
       "oldPrice": 19.99,
       "discountPercent": 20,
-      "pictureUrl": "/images/products/hat-react2.png",
+      "pictureUrl": "images/products/hat-react2.png",
       "images": [
-        "/images/products/hat-react2.png"
+        "images/products/hat-react2.png"
       ],
       "type": "Hats",
       "brand": "React",
@@ -205,9 +205,9 @@ module.exports = {
       "price": 18,
       "oldPrice": 24.99,
       "discountPercent": 25,
-      "pictureUrl": "/images/products/glove-code1.png",
+      "pictureUrl": "images/products/glove-code1.png",
       "images": [
-        "/images/products/glove-code1.png"
+        "images/products/glove-code1.png"
       ],
       "type": "Gloves",
       "brand": "VS Code",
@@ -227,9 +227,9 @@ module.exports = {
       "price": 15,
       "oldPrice": 24.99,
       "discountPercent": 30,
-      "pictureUrl": "/images/products/glove-code2.png",
+      "pictureUrl": "images/products/glove-code2.png",
       "images": [
-        "/images/products/glove-code2.png"
+        "images/products/glove-code2.png"
       ],
       "type": "Gloves",
       "brand": "VS Code",
@@ -249,9 +249,9 @@ module.exports = {
       "price": 16,
       "oldPrice": null,
       "discountPercent": 0,
-      "pictureUrl": "/images/products/glove-react1.png",
+      "pictureUrl": "images/products/glove-react1.png",
       "images": [
-        "/images/products/glove-react1.png"
+        "images/products/glove-react1.png"
       ],
       "type": "Gloves",
       "brand": "React",
@@ -271,9 +271,9 @@ module.exports = {
       "price": 14,
       "oldPrice": 19.99,
       "discountPercent": 10,
-      "pictureUrl": "/images/products/glove-react2.png",
+      "pictureUrl": "images/products/glove-react2.png",
       "images": [
-        "/images/products/glove-react2.png"
+        "images/products/glove-react2.png"
       ],
       "type": "Gloves",
       "brand": "React",
@@ -293,9 +293,9 @@ module.exports = {
       "price": 250,
       "oldPrice": 294.99,
       "discountPercent": 15,
-      "pictureUrl": "/images/products/boot-redis1.png",
+      "pictureUrl": "images/products/boot-redis1.png",
       "images": [
-        "/images/products/boot-redis1.png"
+        "images/products/boot-redis1.png"
       ],
       "type": "Boots",
       "brand": "Redis",
@@ -315,9 +315,9 @@ module.exports = {
       "price": 189.99,
       "oldPrice": 239.99,
       "discountPercent": 20,
-      "pictureUrl": "/images/products/boot-core2.png",
+      "pictureUrl": "images/products/boot-core2.png",
       "images": [
-        "/images/products/boot-core2.png"
+        "images/products/boot-core2.png"
       ],
       "type": "Boots",
       "brand": "NetCore",
@@ -337,9 +337,9 @@ module.exports = {
       "price": 199.99,
       "oldPrice": 269.99,
       "discountPercent": 25,
-      "pictureUrl": "/images/products/boot-core1.png",
+      "pictureUrl": "images/products/boot-core1.png",
       "images": [
-        "/images/products/boot-core1.png"
+        "images/products/boot-core1.png"
       ],
       "type": "Boots",
       "brand": "NetCore",
@@ -359,9 +359,9 @@ module.exports = {
       "price": 150,
       "oldPrice": 214.99,
       "discountPercent": 30,
-      "pictureUrl": "/images/products/boot-ang2.png",
+      "pictureUrl": "images/products/boot-ang2.png",
       "images": [
-        "/images/products/boot-ang2.png"
+        "images/products/boot-ang2.png"
       ],
       "type": "Boots",
       "brand": "Angular",
@@ -381,9 +381,9 @@ module.exports = {
       "price": 180,
       "oldPrice": null,
       "discountPercent": 0,
-      "pictureUrl": "/images/products/boot-ang1.png",
+      "pictureUrl": "images/products/boot-ang1.png",
       "images": [
-        "/images/products/boot-ang1.png"
+        "images/products/boot-ang1.png"
       ],
       "type": "Boots",
       "brand": "Angular",
@@ -402,7 +402,7 @@ module.exports = {
       "id": 1,
       "name": "Boards",
       "slug": "boards",
-      "image": "/images/products/sb-ang1.png",
+      "image": "images/products/sb-ang1.png",
       "tagline": "Snowboards & decks",
       "count": 6
     },
@@ -410,7 +410,7 @@ module.exports = {
       "id": 2,
       "name": "Boots",
       "slug": "boots",
-      "image": "/images/products/boot-ang1.png",
+      "image": "images/products/boot-ang1.png",
       "tagline": "All-mountain boots",
       "count": 5
     },
@@ -418,7 +418,7 @@ module.exports = {
       "id": 3,
       "name": "Gloves",
       "slug": "gloves",
-      "image": "/images/products/glove-code1.png",
+      "image": "images/products/glove-code1.png",
       "tagline": "Insulated gloves",
       "count": 4
     },
@@ -426,7 +426,7 @@ module.exports = {
       "id": 4,
       "name": "Hats",
       "slug": "hats",
-      "image": "/images/products/hat-core1.png",
+      "image": "images/products/hat-core1.png",
       "tagline": "Beanies & caps",
       "count": 3
     }

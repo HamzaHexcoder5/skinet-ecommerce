@@ -12,11 +12,22 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Self-hosted icon font: a CDN hiccup must not turn icons into raw ligature text.
+       The relative URL resolves against <base href> on every deployment path. -->
+  <style>
+    @font-face {
+      font-family: 'Material Icons';
+      font-style: normal;
+      font-weight: 400;
+      font-display: block;
+      src: url('fonts/material-icons.woff2') format('woff2');
+    }
+  </style>
 </head>
 <body>
   <div id="initial-splash" class="splash">
     <div class="splash-inner">
-      <img src="/images/logo.png" alt="Skinet">
+      <img src="images/logo.png" alt="Skinet">
       <div class="splash-bar"><span></span></div>
     </div>
   </div>
