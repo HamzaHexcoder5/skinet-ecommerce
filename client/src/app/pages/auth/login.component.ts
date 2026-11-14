@@ -47,7 +47,11 @@ export class LoginComponent {
         this.loading.set(false);
         const serverErrors = error?.error?.errors;
         if (serverErrors) this.errors.set(serverErrors);
-        else this.formError.set(error?.error?.title ?? 'Could not sign in. Please try again.');
+        else if (!error?.status || error.status === 404) {
+          this.formError.set(
+            'Sign-in needs the live server and this preview cannot reach it. Open the hosted app to sign in.'
+          );
+        } else this.formError.set(error?.error?.title ?? 'Could not sign in. Please try again.');
       }
     });
   }

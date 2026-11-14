@@ -48,7 +48,11 @@ export class RegisterComponent {
           this.loading.set(false);
           const serverErrors = error?.error?.errors;
           if (serverErrors) this.errors.set(serverErrors);
-          else this.formError.set(error?.error?.title ?? 'Could not create the account.');
+          else if (!error?.status || error.status === 404) {
+            this.formError.set(
+              'Creating an account needs the live server and this preview cannot reach it. Open the hosted app to sign up.'
+            );
+          } else this.formError.set(error?.error?.title ?? 'Could not create the account.');
         }
       });
   }
