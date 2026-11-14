@@ -1,0 +1,140 @@
+<section class="page py-10">
+  <div class="mx-auto grid max-w-5xl overflow-hidden rounded-2xl border border-ink-100 bg-white lg:grid-cols-[1fr_440px]">
+    <!-- Pitch -->
+    <div class="relative hidden bg-ink-900 p-8 text-white lg:block">
+      <img src="/images/hero2.jpg" alt="" class="absolute inset-0 h-full w-full object-cover opacity-30" />
+      <div class="relative">
+        <span class="chip bg-white/10 text-white/80">Sell on Skinet</span>
+        <h1 class="mt-4 text-3xl font-extrabold leading-tight">Open your store in minutes</h1>
+        <p class="mt-3 max-w-sm text-sm text-white/70">
+          Join thousands of sellers reaching riders across the country. No setup fee, no listing fee for 30 days.
+        </p>
+
+        <ul class="mt-8 space-y-4 text-sm">
+          @for (item of [
+            { icon: 'storefront', title: 'Your own storefront', text: 'Custom name, products and ratings.' },
+            { icon: 'insights', title: 'Seller dashboard', text: 'Track stock, orders and revenue in one place.' },
+            { icon: 'payments', title: 'Fast payouts', text: 'Weekly settlements straight to your account.' }
+          ]; track item.title) {
+            <li class="flex gap-3">
+              <span class="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white/10">
+                <span class="material-icons text-[18px]">{{ item.icon }}</span>
+              </span>
+              <span>
+                <span class="block font-semibold">{{ item.title }}</span>
+                <span class="block text-white/60">{{ item.text }}</span>
+              </span>
+            </li>
+          }
+        </ul>
+
+        <div class="mt-10 flex items-center gap-4 border-t border-white/10 pt-6 text-xs text-white/50">
+          <span class="material-icons text-[18px] text-emerald-400">verified_user</span>
+          Bank-grade account protection
+        </div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="p-6 sm:p-8">
+      <h2 class="text-xl font-extrabold text-ink-900">Create your store</h2>
+      <p class="mt-1 text-sm text-ink-500">Your store goes live as soon as you add a product.</p>
+
+      <form class="mt-6 space-y-4" (submit)="submit($event)" novalidate>
+        <div>
+          <label class="label" for="storeName">Store name</label>
+          <input
+            id="storeName"
+            name="storeName"
+            class="input"
+            placeholder="e.g. Alpine Outfitters"
+            [class.border-red-400]="errors()['storeName']"
+            [(ngModel)]="form.storeName"
+          />
+          @if (errors()['storeName']) {
+            <p class="mt-1 text-[11px] font-medium text-red-600">{{ errors()['storeName'] }}</p>
+          }
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label class="label" for="firstName">First name</label>
+            <input
+              id="firstName"
+              name="firstName"
+              class="input"
+              [class.border-red-400]="errors()['firstName']"
+              [(ngModel)]="form.firstName"
+            />
+            @if (errors()['firstName']) {
+              <p class="mt-1 text-[11px] font-medium text-red-600">{{ errors()['firstName'] }}</p>
+            }
+          </div>
+          <div>
+            <label class="label" for="lastName">Last name</label>
+            <input
+              id="lastName"
+              name="lastName"
+              class="input"
+              [class.border-red-400]="errors()['lastName']"
+              [(ngModel)]="form.lastName"
+            />
+            @if (errors()['lastName']) {
+              <p class="mt-1 text-[11px] font-medium text-red-600">{{ errors()['lastName'] }}</p>
+            }
+          </div>
+        </div>
+
+        <div>
+          <label class="label" for="email">Business email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            class="input"
+            placeholder="store@example.com"
+            [class.border-red-400]="errors()['email']"
+            [(ngModel)]="form.email"
+          />
+          @if (errors()['email']) {
+            <p class="mt-1 text-[11px] font-medium text-red-600">{{ errors()['email'] }}</p>
+          }
+        </div>
+
+        <div>
+          <label class="label" for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="new-password"
+            class="input"
+            placeholder="At least 8 characters"
+            [class.border-red-400]="errors()['password']"
+            [(ngModel)]="form.password"
+          />
+          @if (errors()['password']) {
+            <p class="mt-1 text-[11px] font-medium text-red-600">{{ errors()['password'] }}</p>
+          } @else {
+            <p class="mt-1 text-[11px] text-ink-400">Use at least 8 characters, including a number.</p>
+          }
+        </div>
+
+        @if (formError()) {
+          <p class="rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-red-600">{{ formError() }}</p>
+        }
+
+        <button type="submit" class="btn-primary w-full py-3" [disabled]="loading()">
+          {{ loading() ? 'Creating store…' : 'Create store' }}
+        </button>
+        <p class="text-center text-[11px] text-ink-400">By continuing you agree to the Skinet seller policy.</p>
+      </form>
+
+      <p class="mt-4 text-center text-sm text-ink-500">
+        Already a seller?
+        <a routerLink="/login" class="font-semibold text-brand-600">Sign in</a>
+      </p>
+    </div>
+  </div>
+</section>

@@ -4,10 +4,10 @@ import { tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Address, Order, User } from './models';
 
-const SESSION_KEY = 'skinet_session_v2';
+export const SESSION_KEY = 'skinet_session_v2';
 const ORDERS_KEY = 'skinet_orders_v2';
 
-interface Session {
+export interface Session {
   token: string;
   user: User;
 }
@@ -19,6 +19,7 @@ export class AuthService {
 
   readonly session = signal<Session | null>(this.restore());
   readonly user = computed(() => this.session()?.user ?? null);
+  readonly token = computed(() => this.session()?.token ?? null);
   readonly isLoggedIn = computed(() => !!this.session());
   readonly isSeller = computed(() => this.session()?.user.role === 'seller');
   readonly orders = signal<Order[]>(this.restoreOrders());
@@ -47,6 +48,15 @@ export class AuthService {
       .pipe(tap((session) => this.persist(session)));
   }
 
+  /** Confirms the stored token is still valid and refreshes the cached profile. */
+  refreshSession() {
+    if (!this.session()) return;
+    this.http.get<User>(`${this.baseUrl}auth/me`).subscribe({
+      next: (user) => this.persist({ token: this.session()!.token, user }),
+      error: () => this.logout()
+    });
+  }
+
   logout() {
     this.session.set(null);
     localStorage.removeItem(SESSION_KEY);
@@ -62,18 +72,26 @@ export class AuthService {
     paymentMethod: string;
   }) {
     return this.http
-      .post<Order>(`${this.baseUrl}orders`, payload, {
-        headers: { Authorization: `Bearer ${this.session()?.token ?? ''}` }
-      })
+      .post<Order>(`${this.baseUrl}orders`, payload)
       .pipe(tap((order) => this.rememberOrder(order)));
   }
 
-  getOrders() {
-    return this.orders.asReadonly();
+  loadOrders() {
+    if (!this.isLoggedIn()) return;
+    this.http.get<Order[]>(`${this.baseUrl}orders`).subscribe({
+      next: (orders) => {
+        const merged = [...orders, ...this.orders().filter((local) => !orders.some((item) => item.id === local.id))];
+        this.orders.set(merged);
+        localStorage.setItem(ORDERS_KEY, JSON.stringify(merged));
+      },
+      error: () => {
+        /* keep the locally cached orders */
+      }
+    });
   }
 
   private rememberOrder(order: Order) {
-    const next = [order, ...this.orders()];
+    const next = [order, ...this.orders().filter((item) => item.id !== order.id)];
     this.orders.set(next);
     localStorage.setItem(ORDERS_KEY, JSON.stringify(next));
   }

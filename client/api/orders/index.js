@@ -1,38 +1,40 @@
-// Demo order endpoint for the static Vercel deployment.
-// Orders are kept in memory per serverless instance.
-const { readToken } = require('../_lib/auth');
-
-const orders = new Map();
+// Orders for the signed-in user. Requires a valid bearer token.
+const db = require('../_lib/db');
+const { session } = require('../_lib/auth');
+const { validateOrder } = require('../_lib/validate');
 
 module.exports = (req, res) => {
-  const session = readToken(req.headers.authorization);
-  const key = session && session.sub ? session.sub : 'guest';
+  const result = session(req);
+  if (result.error) {
+    return res.status(result.status).json(result.error);
+  }
+
+  const user = result.user;
 
   if (req.method === 'GET') {
-    return res.status(200).json(orders.get(key) || []);
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json(db.listOrders(user.id));
   }
 
   if (req.method === 'POST') {
-    const payload = req.body || {};
-    if (!payload.items || payload.items.length === 0) {
-      return res.status(400).json({ title: 'An order needs at least one item' });
+    const body = req.body || {};
+    const errors = validateOrder(body);
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({ title: 'Please fix the highlighted fields', errors });
     }
 
-    const order = {
-      id: `SN-${Date.now().toString().slice(-8)}`,
+    const order = db.addOrder(user.id, {
       placedAt: new Date().toISOString(),
       status: 'Processing',
-      paymentMethod: payload.paymentMethod || 'Cash on delivery',
-      address: payload.address || null,
-      items: payload.items,
-      subtotal: payload.subtotal || 0,
-      shipping: payload.shipping || 0,
-      discount: payload.discount || 0,
-      total: payload.total || 0
-    };
+      paymentMethod: body.paymentMethod === 'card' ? 'Card' : 'Cash on delivery',
+      address: body.address,
+      items: body.items,
+      subtotal: Number(body.subtotal),
+      shipping: Number(body.shipping),
+      discount: Number(body.discount),
+      total: Number(body.total)
+    });
 
-    const list = orders.get(key) || [];
-    orders.set(key, [order, ...list]);
     return res.status(201).json(order);
   }
 

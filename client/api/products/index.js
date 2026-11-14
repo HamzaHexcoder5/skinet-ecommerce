@@ -1,6 +1,6 @@
 // Demo catalog endpoint for the static Vercel deployment.
 // The production backend is the .NET 8 Web API in /API.
-const { products } = require('../_data/catalog');
+const db = require('../_lib/db');
 
 const toList = (value) => (value ? String(value).split(',').filter(Boolean) : []);
 const num = (value) => (value === undefined || value === '' ? null : Number(value));
@@ -23,7 +23,7 @@ module.exports = (req, res) => {
   const pageIndex = Math.max(1, parseInt(query.pageIndex, 10) || 1);
   const pageSize = Math.max(1, parseInt(query.pageSize, 10) || 12);
 
-  let items = products.filter((product) => {
+  let items = db.listProducts().filter((product) => {
     const matchesSearch =
       !search ||
       product.name.toLowerCase().includes(search) ||

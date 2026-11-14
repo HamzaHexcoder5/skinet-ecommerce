@@ -146,7 +146,7 @@
                 4.7 seller rating · ships from Pakistan
               </p>
             </div>
-            <a [routerLink]="['/catalog']" [queryParams]="{ brand: product()!.brand }" class="btn-outline shrink-0 text-xs">Visit store</a>
+            <a [routerLink]="['/store', product()!.sellerId]" class="btn-outline shrink-0 text-xs">Visit store</a>
           </div>
         </div>
       </div>

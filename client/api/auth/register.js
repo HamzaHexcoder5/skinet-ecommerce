@@ -1,5 +1,7 @@
-// Demo registration endpoint for the static Vercel deployment.
-const { issueToken } = require('../_lib/auth');
+// Demo registration endpoint with validation and duplicate email checks.
+const db = require('../_lib/db');
+const { sign } = require('../_lib/auth');
+const { validateRegister } = require('../_lib/validate');
 
 module.exports = (req, res) => {
   if (req.method !== 'POST') {
@@ -7,31 +9,36 @@ module.exports = (req, res) => {
     return res.status(405).json({ title: 'Method not allowed' });
   }
 
-  const { firstName, lastName, email, password, storeName } = req.body || {};
-  if (!firstName || !email || !password) {
-    return res.status(400).json({ title: 'Name, email and password are required' });
-  }
-  if (String(password).length < 6) {
-    return res.status(400).json({ title: 'Password must be at least 6 characters' });
+  const body = req.body || {};
+  const errors = validateRegister(body);
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({ title: 'Please fix the highlighted fields', errors });
   }
 
-  const isSeller = Boolean(storeName);
-  const user = {
-    id: `u_${Buffer.from(String(email)).toString('base64url').slice(0, 10)}`,
-    firstName: String(firstName),
-    lastName: String(lastName || ''),
-    email: String(email),
+  const isSeller = body.storeName !== undefined;
+  const user = db.createUser({
+    firstName: String(body.firstName).trim(),
+    lastName: String(body.lastName ?? '').trim(),
+    email: String(body.email).trim(),
+    password: String(body.password),
     role: isSeller ? 'seller' : 'customer',
     store: isSeller
       ? {
-          name: String(storeName),
-          slug: String(storeName).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+          name: String(body.storeName).trim(),
+          slug: String(body.storeName).trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
           rating: 0,
           products: 0,
           joined: String(new Date().getFullYear())
         }
       : null
-  };
+  });
 
-  res.status(201).json({ token: issueToken({ sub: user.id, role: user.role }), user });
+  if (!user) {
+    return res.status(409).json({
+      title: 'An account with this email already exists',
+      errors: { email: 'This email is already registered' }
+    });
+  }
+
+  res.status(201).json({ token: sign({ sub: user.id, role: user.role }), user });
 };

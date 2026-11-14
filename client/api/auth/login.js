@@ -1,5 +1,7 @@
-// Demo login endpoint for the static Vercel deployment.
-const { issueToken } = require('../_lib/auth');
+// Demo login endpoint with real password verification and signed tokens.
+const db = require('../_lib/db');
+const { sign } = require('../_lib/auth');
+const { validateLogin } = require('../_lib/validate');
 
 module.exports = (req, res) => {
   if (req.method !== 'POST') {
@@ -7,26 +9,19 @@ module.exports = (req, res) => {
     return res.status(405).json({ title: 'Method not allowed' });
   }
 
-  const { email, password } = req.body || {};
-  if (!email || !password) {
-    return res.status(400).json({ title: 'Email and password are required' });
-  }
-  if (String(password).length < 6) {
-    return res.status(400).json({ title: 'Password must be at least 6 characters' });
+  const body = req.body || {};
+  const errors = validateLogin(body);
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({ title: 'Please fix the highlighted fields', errors });
   }
 
-  const isSeller = String(email).toLowerCase().startsWith('seller');
-  const name = String(email).split('@')[0].replace(/[._-]/g, ' ');
-  const user = {
-    id: `u_${Buffer.from(String(email)).toString('base64url').slice(0, 10)}`,
-    firstName: isSeller ? 'Demo' : name.charAt(0).toUpperCase() + name.slice(1),
-    lastName: isSeller ? 'Seller' : 'Customer',
-    email: String(email),
-    role: isSeller ? 'seller' : 'customer',
-    store: isSeller
-      ? { name: 'Demo Store', slug: 'demo-store', rating: 4.6, products: 12, joined: '2024' }
-      : null
-  };
+  const record = db.findUserByEmail(body.email);
+  if (!record || !db.verifyPassword(String(body.password), record.salt, record.hash)) {
+    return res.status(401).json({ title: 'Email or password is incorrect', status: 401 });
+  }
 
-  res.status(200).json({ token: issueToken({ sub: user.id, role: user.role }), user });
+  res.status(200).json({
+    token: sign({ sub: record.user.id, role: record.user.role }),
+    user: record.user
+  });
 };

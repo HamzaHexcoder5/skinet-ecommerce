@@ -30,7 +30,7 @@ export class CheckoutComponent {
   readonly payment = signal<'cod' | 'card'>('cod');
   readonly placing = signal(false);
   readonly placedOrder = signal<Order | null>(null);
-  readonly errors = signal<string[]>([]);
+  readonly errors = signal<Record<string, string>>({});
 
   get expressFee(): number {
     return 12;
@@ -46,19 +46,20 @@ export class CheckoutComponent {
 
   update(field: keyof Address, value: string) {
     this.address.set({ ...this.address(), [field]: value });
+    if (this.errors()[field]) {
+      const next = { ...this.errors() };
+      delete next[field];
+      this.errors.set(next);
+    }
   }
 
   placeOrder() {
     const address = this.address();
-    const missing: string[] = [];
-    if (!address.fullName.trim()) missing.push('Full name');
-    if (!address.phone.trim()) missing.push('Phone number');
-    if (!address.city.trim()) missing.push('City');
-    if (!address.street.trim()) missing.push('Street address');
-    this.errors.set(missing);
+    const errors = this.validate(address);
+    this.errors.set(errors);
 
-    if (missing.length > 0) {
-      this.toast.error('Please complete the delivery address');
+    if (Object.keys(errors).length > 0) {
+      this.toast.error('Please check the highlighted fields');
       return;
     }
 
@@ -76,8 +77,15 @@ export class CheckoutComponent {
         shipping: this.shippingFee,
         discount: this.cart.discount(),
         total: this.total,
-        address,
-        paymentMethod: this.payment() === 'cod' ? 'Cash on delivery' : 'Card'
+        address: {
+          ...address,
+          fullName: address.fullName.trim(),
+          phone: address.phone.trim(),
+          city: address.city.trim(),
+          area: address.area.trim(),
+          street: address.street.trim()
+        },
+        paymentMethod: this.payment()
       })
       .subscribe({
         next: (order) => {
@@ -86,14 +94,33 @@ export class CheckoutComponent {
           this.cart.clear();
           window.scrollTo({ top: 0, behavior: 'smooth' });
         },
-        error: () => {
+        error: (error) => {
           this.placing.set(false);
-          this.toast.error('Could not place the order. Please try again.');
+          const serverErrors = error?.error?.errors;
+          if (serverErrors) this.errors.set(serverErrors);
+          this.toast.error(error?.error?.title ?? 'Could not place the order. Please try again.');
         }
       });
   }
 
   continueShopping() {
     this.router.navigate(['/catalog']);
+  }
+
+  private validate(address: Address): Record<string, string> {
+    const errors: Record<string, string> = {};
+    const phone = address.phone.trim();
+
+    if (!address.fullName.trim()) errors['fullName'] = 'Full name is required';
+    else if (address.fullName.trim().length < 3) errors['fullName'] = 'Enter your full name';
+
+    if (!phone) errors['phone'] = 'Phone number is required';
+    else if (!/^[0-9+\-\s()]{7,20}$/.test(phone)) errors['phone'] = 'Enter a valid phone number';
+
+    if (!address.city.trim()) errors['city'] = 'City is required';
+    if (!address.street.trim()) errors['street'] = 'Street address is required';
+    else if (address.street.trim().length < 5) errors['street'] = 'Add a little more detail';
+
+    return errors;
   }
 }

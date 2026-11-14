@@ -58,15 +58,24 @@
           <div class="grid gap-3 sm:grid-cols-2">
             <div>
               <label class="label" for="fullName">Full name</label>
-              <input id="fullName" class="input" placeholder="Your name" [value]="address().fullName" (input)="update('fullName', $any($event.target).value)" />
+              <input id="fullName" class="input" placeholder="Your name" [class.border-red-400]="errors()['fullName']" [value]="address().fullName" (input)="update('fullName', $any($event.target).value)" />
+              @if (errors()['fullName']) {
+                <p class="mt-1 text-[11px] font-medium text-red-600">{{ errors()['fullName'] }}</p>
+              }
             </div>
             <div>
               <label class="label" for="phone">Phone number</label>
-              <input id="phone" class="input" placeholder="03xx xxxxxxx" [value]="address().phone" (input)="update('phone', $any($event.target).value)" />
+              <input id="phone" class="input" placeholder="03xx xxxxxxx" [class.border-red-400]="errors()['phone']" [value]="address().phone" (input)="update('phone', $any($event.target).value)" />
+              @if (errors()['phone']) {
+                <p class="mt-1 text-[11px] font-medium text-red-600">{{ errors()['phone'] }}</p>
+              }
             </div>
             <div>
               <label class="label" for="city">City</label>
-              <input id="city" class="input" placeholder="Lahore" [value]="address().city" (input)="update('city', $any($event.target).value)" />
+              <input id="city" class="input" placeholder="Lahore" [class.border-red-400]="errors()['city']" [value]="address().city" (input)="update('city', $any($event.target).value)" />
+              @if (errors()['city']) {
+                <p class="mt-1 text-[11px] font-medium text-red-600">{{ errors()['city'] }}</p>
+              }
             </div>
             <div>
               <label class="label" for="area">Area</label>
@@ -74,7 +83,10 @@
             </div>
             <div class="sm:col-span-2">
               <label class="label" for="street">Street address</label>
-              <input id="street" class="input" placeholder="House, street, landmark" [value]="address().street" (input)="update('street', $any($event.target).value)" />
+              <input id="street" class="input" placeholder="House, street, landmark" [class.border-red-400]="errors()['street']" [value]="address().street" (input)="update('street', $any($event.target).value)" />
+              @if (errors()['street']) {
+                <p class="mt-1 text-[11px] font-medium text-red-600">{{ errors()['street'] }}</p>
+              }
             </div>
             <div class="sm:col-span-2">
               <label class="label" for="notes">Delivery notes (optional)</label>
@@ -82,11 +94,10 @@
             </div>
           </div>
 
-          @if (errors().length > 0) {
-            <p class="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-red-600">
-              Missing: {{ errors().join(', ') }}
-            </p>
-          }
+          <p class="mt-3 flex items-center gap-1.5 text-[11px] text-ink-400">
+            <span class="material-icons text-[14px] text-emerald-500">lock</span>
+            Your details are only used to deliver this order.
+          </p>
         </div>
 
         <!-- Delivery -->

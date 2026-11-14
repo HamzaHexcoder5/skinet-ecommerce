@@ -1,0 +1,85 @@
+<section class="page py-10">
+  <div class="mx-auto max-w-lg rounded-2xl border border-ink-100 bg-white p-6 sm:p-8">
+    <h1 class="text-xl font-extrabold text-ink-900">Create your account</h1>
+    <p class="mt-1 text-sm text-ink-500">It takes less than a minute.</p>
+
+    <form class="mt-6 grid gap-4 sm:grid-cols-2" (submit)="submit($event)" novalidate>
+      <div>
+        <label class="label" for="firstName">First name</label>
+        <input
+          id="firstName"
+          name="firstName"
+          class="input"
+          [class.border-red-400]="errors()['firstName']"
+          [(ngModel)]="form.firstName"
+        />
+        @if (errors()['firstName']) {
+          <p class="mt-1 text-[11px] font-medium text-red-600">{{ errors()['firstName'] }}</p>
+        }
+      </div>
+
+      <div>
+        <label class="label" for="lastName">Last name</label>
+        <input
+          id="lastName"
+          name="lastName"
+          class="input"
+          [class.border-red-400]="errors()['lastName']"
+          [(ngModel)]="form.lastName"
+        />
+        @if (errors()['lastName']) {
+          <p class="mt-1 text-[11px] font-medium text-red-600">{{ errors()['lastName'] }}</p>
+        }
+      </div>
+
+      <div class="sm:col-span-2">
+        <label class="label" for="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          class="input"
+          [class.border-red-400]="errors()['email']"
+          placeholder="you@example.com"
+          [(ngModel)]="form.email"
+        />
+        @if (errors()['email']) {
+          <p class="mt-1 text-[11px] font-medium text-red-600">{{ errors()['email'] }}</p>
+        }
+      </div>
+
+      <div class="sm:col-span-2">
+        <label class="label" for="password">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="new-password"
+          class="input"
+          [class.border-red-400]="errors()['password']"
+          placeholder="At least 8 characters with letters and numbers"
+          [(ngModel)]="form.password"
+        />
+        @if (errors()['password']) {
+          <p class="mt-1 text-[11px] font-medium text-red-600">{{ errors()['password'] }}</p>
+        } @else {
+          <p class="mt-1 text-[11px] text-ink-400">Use at least 8 characters, including a number.</p>
+        }
+      </div>
+
+      @if (formError()) {
+        <p class="rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-red-600 sm:col-span-2">{{ formError() }}</p>
+      }
+
+      <button type="submit" class="btn-primary w-full py-3 sm:col-span-2" [disabled]="loading()">
+        {{ loading() ? 'Creating account…' : 'Create account' }}
+      </button>
+    </form>
+
+    <p class="mt-4 text-center text-sm text-ink-500">
+      Already have an account?
+      <a routerLink="/login" class="font-semibold text-brand-600">Sign in</a>
+    </p>
+  </div>
+</section>

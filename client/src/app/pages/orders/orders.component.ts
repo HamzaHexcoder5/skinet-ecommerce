@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 
@@ -85,9 +85,13 @@ import { AuthService } from '../../core/auth.service';
     </section>
   `
 })
-export class OrdersComponent {
+export class OrdersComponent implements OnInit {
   readonly auth = inject(AuthService);
   readonly expanded = signal<string | null>(null);
+
+  ngOnInit() {
+    this.auth.loadOrders();
+  }
 
   toggle(id: string) {
     this.expanded.set(this.expanded() === id ? null : id);

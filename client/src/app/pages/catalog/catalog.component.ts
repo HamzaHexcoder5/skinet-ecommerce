@@ -109,6 +109,29 @@ export class CatalogComponent implements OnInit {
     this.apply();
   }
 
+  toggleDeals() {
+    this.dealsOnly.set(!this.dealsOnly());
+    this.apply();
+  }
+
+  removeChip(key: string) {
+    if (key.startsWith('cat:')) {
+      this.toggleCategory(key.slice(4));
+      return;
+    }
+    if (key.startsWith('brand:')) {
+      this.toggleBrand(key.slice(6));
+      return;
+    }
+    if (key === 'price') {
+      this.minPrice.set(null);
+      this.maxPrice.set(null);
+    }
+    if (key === 'rating') this.minRating.set(null);
+    if (key === 'deals') this.dealsOnly.set(false);
+    this.apply();
+  }
+
   goToPage(page: number) {
     if (page < 1 || page > this.totalPages()) return;
     this.page.set(page);
@@ -129,6 +152,37 @@ export class CatalogComponent implements OnInit {
       this.minRating() != null ||
       this.dealsOnly()
     );
+  }
+
+  get activeCount(): number {
+    return (
+      this.selectedCategories().length +
+      this.selectedBrands().length +
+      (this.minPrice() != null || this.maxPrice() != null ? 1 : 0) +
+      (this.minRating() != null ? 1 : 0) +
+      (this.dealsOnly() ? 1 : 0)
+    );
+  }
+
+  get activeChips(): { key: string; label: string }[] {
+    const chips: { key: string; label: string }[] = [];
+
+    this.selectedCategories().forEach((slug) => {
+      const match = this.categories().find((category) => category.slug === slug);
+      chips.push({ key: `cat:${slug}`, label: match?.name ?? slug });
+    });
+
+    this.selectedBrands().forEach((brand) => chips.push({ key: `brand:${brand}`, label: brand }));
+
+    if (this.minPrice() != null || this.maxPrice() != null) {
+      const band = this.priceBands.find((item) => item.min === this.minPrice() && item.max === this.maxPrice());
+      chips.push({ key: 'price', label: band?.label ?? 'Custom price' });
+    }
+
+    if (this.minRating() != null) chips.push({ key: 'rating', label: `${this.minRating()}★ & up` });
+    if (this.dealsOnly()) chips.push({ key: 'deals', label: 'On sale' });
+
+    return chips;
   }
 
   get pages(): number[] {
