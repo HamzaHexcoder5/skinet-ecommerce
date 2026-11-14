@@ -18,6 +18,7 @@ export class LoginComponent {
 
   email = '';
   password = '';
+  readonly returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
   readonly loading = signal(false);
   readonly errors = signal<Record<string, string>>({});
   readonly formError = signal('');

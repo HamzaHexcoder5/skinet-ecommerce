@@ -3,12 +3,13 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 import { ProductPayload, SellerProductService } from '../../core/seller-product.service';
+import { SelectComponent, SelectOption } from '../../shared/select/select.component';
 import { ToastService } from '../../core/toast.service';
 
 @Component({
   selector: 'app-seller-dashboard',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, SelectComponent],
   templateUrl: './seller-dashboard.component.html'
 })
 export class SellerDashboardComponent implements OnInit {
@@ -34,6 +35,14 @@ export class SellerDashboardComponent implements OnInit {
   ];
 
   readonly categories = ['Boards', 'Boots', 'Gloves', 'Hats'];
+
+  readonly categoryOptions: SelectOption[] = this.categories.map((category) => ({ value: category, label: category }));
+
+  readonly imageOptions: SelectOption[] = this.images.map((image) => ({
+    value: image,
+    label: image.split('/').pop() ?? image,
+    icon: 'image'
+  }));
 
   form: ProductPayload = this.emptyForm();
 

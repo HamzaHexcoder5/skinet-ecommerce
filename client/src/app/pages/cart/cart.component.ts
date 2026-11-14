@@ -1,7 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../core/auth.service';
 import { CartService } from '../../core/cart.service';
 import { ToastService } from '../../core/toast.service';
+import { WishlistService } from '../../core/wishlist.service';
 
 @Component({
   selector: 'app-cart',
@@ -11,6 +13,8 @@ import { ToastService } from '../../core/toast.service';
 })
 export class CartComponent {
   readonly cart = inject(CartService);
+  readonly auth = inject(AuthService);
+  private wishlist = inject(WishlistService);
   private toast = inject(ToastService);
   private router = inject(Router);
 
@@ -37,6 +41,12 @@ export class CartComponent {
   remove(productId: number) {
     this.cart.remove(productId);
     this.toast.info('Item removed from cart');
+  }
+
+  saveForLater(productId: number) {
+    this.cart.remove(productId);
+    if (!this.wishlist.has(productId)) this.wishlist.toggle(productId);
+    this.toast.success('Moved to your wishlist');
   }
 
   checkout() {

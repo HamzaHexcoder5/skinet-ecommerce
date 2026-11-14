@@ -27,26 +27,24 @@
         }
       </button>
 
-      <label class="flex items-center gap-2 rounded-lg border border-ink-200 bg-white px-3 py-2">
-        <span class="text-xs font-medium text-ink-500">Sort</span>
-        <select
-          class="cursor-pointer bg-transparent text-sm font-semibold text-ink-800 outline-none"
+      <div class="flex items-center gap-2 rounded-lg border border-ink-200 bg-white pl-3">
+        <span class="shrink-0 text-xs font-medium text-ink-500">Sort</span>
+        <app-select
+          class="w-[188px]"
+          [options]="sortOptions"
           [value]="sort()"
-          (change)="changeSort($any($event.target).value)"
-          aria-label="Sort products"
-        >
-          @for (option of sortOptions; track option.value) {
-            <option [value]="option.value">{{ option.label }}</option>
-          }
-        </select>
-      </label>
+          variant="bare"
+          ariaLabel="Sort products"
+          (valueChange)="changeSort($event)"
+        />
+      </div>
     </div>
   </div>
 
   <div class="grid gap-6 lg:grid-cols-[260px_1fr]">
-    <!-- Desktop sidebar: everything fits in one card, no inner scrollbar -->
+    <!-- Desktop sidebar: pinned flush under the header, no inner scrollbar -->
     <aside class="hidden lg:block">
-      <div class="sticky top-40">
+      <div class="sticky-under-header">
         <ng-container *ngTemplateOutlet="filtersTpl" />
       </div>
     </aside>

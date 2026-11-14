@@ -1,0 +1,54 @@
+<div class="relative h-full">
+  <button
+    type="button"
+    [class]="triggerClass()"
+    [attr.aria-expanded]="open()"
+    aria-haspopup="listbox"
+    [attr.aria-label]="ariaLabel()"
+    (click)="toggle()"
+    (keydown)="onKeydown($event)"
+  >
+    <span class="truncate" [class.text-ink-400]="!current()">{{ current()?.label ?? placeholder() }}</span>
+    <span
+      class="material-icons shrink-0 text-[18px] text-ink-400 transition-transform duration-200"
+      [class.rotate-180]="open()"
+    >
+      expand_more
+    </span>
+  </button>
+
+  @if (open()) {
+    <div
+      class="absolute left-0 top-full z-50 mt-1.5 max-h-72 min-w-full w-max max-w-[19rem] overflow-y-auto rounded-xl border border-ink-100 bg-white p-1 shadow-lift"
+      role="listbox"
+      [attr.aria-label]="ariaLabel()"
+    >
+      @for (option of options(); track option.value; let i = $index) {
+        <button
+          type="button"
+          role="option"
+          [attr.aria-selected]="option.value === value()"
+          class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition"
+          [class.bg-brand-50]="option.value === value()"
+          [class.font-semibold]="option.value === value()"
+          [class.text-brand-700]="option.value === value()"
+          [class.bg-ink-50]="activeIndex() === i && option.value !== value()"
+          [class.text-ink-700]="option.value !== value()"
+          (click)="choose(option)"
+          (mouseenter)="activeIndex.set(i)"
+        >
+          @if (option.icon) {
+            <span class="material-icons text-[16px] text-ink-400">{{ option.icon }}</span>
+          }
+          <span class="flex-1 truncate">{{ option.label }}</span>
+          @if (option.hint) {
+            <span class="shrink-0 text-[11px] font-medium text-ink-400">{{ option.hint }}</span>
+          }
+          @if (option.value === value()) {
+            <span class="material-icons text-[16px] text-brand-500">check</span>
+          }
+        </button>
+      }
+    </div>
+  }
+</div>

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CatalogService } from '../../core/catalog.service';
 import { Category, Product } from '../../core/models';
 import { ProductCardComponent } from '../../shared/product-card/product-card.component';
+import { SelectComponent, SelectOption } from '../../shared/select/select.component';
 
 interface PriceBand {
   label: string;
@@ -14,7 +15,7 @@ interface PriceBand {
 @Component({
   selector: 'app-catalog',
   standalone: true,
-  imports: [RouterLink, NgTemplateOutlet, ProductCardComponent],
+  imports: [RouterLink, NgTemplateOutlet, ProductCardComponent, SelectComponent],
   templateUrl: './catalog.component.html'
 })
 export class CatalogComponent implements OnInit {
@@ -40,13 +41,13 @@ export class CatalogComponent implements OnInit {
   readonly dealsOnly = signal(false);
   readonly filtersOpen = signal(false);
 
-  readonly sortOptions = [
-    { value: 'popular', label: 'Best selling' },
-    { value: 'newest', label: 'Newest first' },
-    { value: 'priceAsc', label: 'Price: low to high' },
-    { value: 'priceDesc', label: 'Price: high to low' },
-    { value: 'rating', label: 'Top rated' },
-    { value: 'discount', label: 'Biggest discount' }
+  readonly sortOptions: SelectOption[] = [
+    { value: 'popular', label: 'Best selling', icon: 'local_fire_department' },
+    { value: 'newest', label: 'Newest first', icon: 'new_releases' },
+    { value: 'priceAsc', label: 'Price: low to high', icon: 'south' },
+    { value: 'priceDesc', label: 'Price: high to low', icon: 'north' },
+    { value: 'rating', label: 'Top rated', icon: 'star' },
+    { value: 'discount', label: 'Biggest discount', icon: 'percent' }
   ];
 
   readonly priceBands: PriceBand[] = [

@@ -100,22 +100,26 @@
             </div>
 
             <div>
-              <label class="label" for="pcat">Category</label>
-              <select id="pcat" name="pcat" class="input" [(ngModel)]="form.category">
-                @for (category of categories; track category) {
-                  <option [value]="category">{{ category }}</option>
-                }
-              </select>
+              <label class="label">Category</label>
+              <app-select
+                [options]="categoryOptions"
+                [value]="form.category"
+                placeholder="Choose a category"
+                ariaLabel="Product category"
+                (valueChange)="form.category = $event"
+              />
               @if (errors()['category']) { <p class="mt-1 text-[11px] font-medium text-red-600">{{ errors()['category'] }}</p> }
             </div>
 
             <div>
-              <label class="label" for="pimg">Photo</label>
-              <select id="pimg" name="pimg" class="input" [(ngModel)]="form.pictureUrl">
-                @for (image of images; track image) {
-                  <option [value]="image">{{ image.split('/').pop() }}</option>
-                }
-              </select>
+              <label class="label">Photo</label>
+              <app-select
+                [options]="imageOptions"
+                [value]="form.pictureUrl"
+                placeholder="Choose a photo"
+                ariaLabel="Product photo"
+                (valueChange)="form.pictureUrl = $event"
+              />
               @if (errors()['pictureUrl']) { <p class="mt-1 text-[11px] font-medium text-red-600">{{ errors()['pictureUrl'] }}</p> }
             </div>
 

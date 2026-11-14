@@ -8,7 +8,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 1,
     "name": "Angular Speedster Board 2000",
-    "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.",
+    "description": "Built on a lightweight wood core with a sintered base, the Angular Speedster Board 2000 holds an edge on hardpack and floats through fresh powder. Camber underfoot keeps it lively while the forgiving flex makes long days easy on the legs. Arrives waxed, tuned and ready to mount.",
     "price": 200,
     "oldPrice": 224.99,
     "discountPercent": 10,
@@ -30,7 +30,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 2,
     "name": "Green Angular Board 3000",
-    "description": "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.",
+    "description": "Built on a lightweight wood core with a sintered base, the Green Angular Board 3000 holds an edge on hardpack and floats through fresh powder. Camber underfoot keeps it lively while the forgiving flex makes long days easy on the legs. Arrives waxed, tuned and ready to mount.",
     "price": 150,
     "oldPrice": 179.99,
     "discountPercent": 15,
@@ -52,7 +52,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 3,
     "name": "Core Board Speed Rush 3",
-    "description": "Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Mauris eget neque at sem venenatis eleifend. Ut nonummy.",
+    "description": "Built on a lightweight wood core with a sintered base, the Core Board Speed Rush 3 holds an edge on hardpack and floats through fresh powder. Camber underfoot keeps it lively while the forgiving flex makes long days easy on the legs. Arrives waxed, tuned and ready to mount.",
     "price": 180,
     "oldPrice": 224.99,
     "discountPercent": 20,
@@ -74,7 +74,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 4,
     "name": "Net Core Super Board",
-    "description": "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.",
+    "description": "Built on a lightweight wood core with a sintered base, the Net Core Super Board holds an edge on hardpack and floats through fresh powder. Camber underfoot keeps it lively while the forgiving flex makes long days easy on the legs. Arrives waxed, tuned and ready to mount.",
     "price": 300,
     "oldPrice": 399.99,
     "discountPercent": 25,
@@ -96,7 +96,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 5,
     "name": "React Board Super Whizzy Fast",
-    "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.",
+    "description": "Built on a lightweight wood core with a sintered base, the React Board Super Whizzy Fast holds an edge on hardpack and floats through fresh powder. Camber underfoot keeps it lively while the forgiving flex makes long days easy on the legs. Arrives waxed, tuned and ready to mount.",
     "price": 250,
     "oldPrice": 359.99,
     "discountPercent": 30,
@@ -118,7 +118,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 6,
     "name": "Typescript Entry Board",
-    "description": "Aenean nec lorem. In porttitor. Donec laoreet nonummy augue.",
+    "description": "Built on a lightweight wood core with a sintered base, the Typescript Entry Board holds an edge on hardpack and floats through fresh powder. Camber underfoot keeps it lively while the forgiving flex makes long days easy on the legs. Arrives waxed, tuned and ready to mount.",
     "price": 120,
     "oldPrice": null,
     "discountPercent": 0,
@@ -140,7 +140,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 7,
     "name": "Core Blue Hat",
-    "description": "Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.",
+    "description": "A double-layer knit with a fleece headband lets the Core Blue Hat trap heat without the itch. It packs flat into a jacket pocket, keeps its shape after a season of use and stays put under a helmet.",
     "price": 10,
     "oldPrice": 14.99,
     "discountPercent": 10,
@@ -162,7 +162,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 8,
     "name": "Green React Woolen Hat",
-    "description": "Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Mauris eget neque at sem venenatis eleifend. Ut nonummy.",
+    "description": "A double-layer knit with a fleece headband lets the Green React Woolen Hat trap heat without the itch. It packs flat into a jacket pocket, keeps its shape after a season of use and stays put under a helmet.",
     "price": 8,
     "oldPrice": 9.99,
     "discountPercent": 15,
@@ -184,7 +184,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 9,
     "name": "Purple React Woolen Hat",
-    "description": "Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.",
+    "description": "A double-layer knit with a fleece headband lets the Purple React Woolen Hat trap heat without the itch. It packs flat into a jacket pocket, keeps its shape after a season of use and stays put under a helmet.",
     "price": 15,
     "oldPrice": 19.99,
     "discountPercent": 20,
@@ -206,7 +206,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 10,
     "name": "Blue Code Gloves",
-    "description": "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.",
+    "description": "A waterproof insert and brushed lining keep the Blue Code Gloves warm on the coldest lifts. The palm is reinforced for rope work and board carry, while touchscreen-friendly fingertips mean you never have to bare a hand to check your phone.",
     "price": 18,
     "oldPrice": 24.99,
     "discountPercent": 25,
@@ -228,7 +228,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 11,
     "name": "Green Code Gloves",
-    "description": "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.",
+    "description": "A waterproof insert and brushed lining keep the Green Code Gloves warm on the coldest lifts. The palm is reinforced for rope work and board carry, while touchscreen-friendly fingertips mean you never have to bare a hand to check your phone.",
     "price": 15,
     "oldPrice": 24.99,
     "discountPercent": 30,
@@ -250,7 +250,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 12,
     "name": "Purple React Gloves",
-    "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa.",
+    "description": "A waterproof insert and brushed lining keep the Purple React Gloves warm on the coldest lifts. The palm is reinforced for rope work and board carry, while touchscreen-friendly fingertips mean you never have to bare a hand to check your phone.",
     "price": 16,
     "oldPrice": null,
     "discountPercent": 0,
@@ -272,7 +272,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 13,
     "name": "Green React Gloves",
-    "description": "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.",
+    "description": "A waterproof insert and brushed lining keep the Green React Gloves warm on the coldest lifts. The palm is reinforced for rope work and board carry, while touchscreen-friendly fingertips mean you never have to bare a hand to check your phone.",
     "price": 14,
     "oldPrice": 19.99,
     "discountPercent": 10,
@@ -294,7 +294,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 14,
     "name": "Redis Red Boots",
-    "description": "Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Mauris eget neque at sem venenatis eleifend. Ut nonummy.",
+    "description": "A heat-mouldable liner and a supportive shell give the Redis Red Boots the response you want on steep runs without punishing your feet on the lift. Reinforced toe caps and a grippy outsole handle icy car parks and short bootpacks, and the flex stays consistent below freezing.",
     "price": 250,
     "oldPrice": 294.99,
     "discountPercent": 15,
@@ -316,7 +316,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 15,
     "name": "Core Red Boots",
-    "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.",
+    "description": "A heat-mouldable liner and a supportive shell give the Core Red Boots the response you want on steep runs without punishing your feet on the lift. Reinforced toe caps and a grippy outsole handle icy car parks and short bootpacks, and the flex stays consistent below freezing.",
     "price": 189.99,
     "oldPrice": 239.99,
     "discountPercent": 20,
@@ -338,7 +338,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 16,
     "name": "Core Purple Boots",
-    "description": "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.",
+    "description": "A heat-mouldable liner and a supportive shell give the Core Purple Boots the response you want on steep runs without punishing your feet on the lift. Reinforced toe caps and a grippy outsole handle icy car parks and short bootpacks, and the flex stays consistent below freezing.",
     "price": 199.99,
     "oldPrice": 269.99,
     "discountPercent": 25,
@@ -360,7 +360,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 17,
     "name": "Angular Purple Boots",
-    "description": "Aenean nec lorem. In porttitor. Donec laoreet nonummy augue.",
+    "description": "A heat-mouldable liner and a supportive shell give the Angular Purple Boots the response you want on steep runs without punishing your feet on the lift. Reinforced toe caps and a grippy outsole handle icy car parks and short bootpacks, and the flex stays consistent below freezing.",
     "price": 150,
     "oldPrice": 214.99,
     "discountPercent": 30,
@@ -382,7 +382,7 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     "id": 18,
     "name": "Angular Blue Boots",
-    "description": "Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Mauris eget neque at sem venenatis eleifend. Ut nonummy.",
+    "description": "A heat-mouldable liner and a supportive shell give the Angular Blue Boots the response you want on steep runs without punishing your feet on the lift. Reinforced toe caps and a grippy outsole handle icy car parks and short bootpacks, and the flex stays consistent below freezing.",
     "price": 180,
     "oldPrice": null,
     "discountPercent": 0,

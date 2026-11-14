@@ -1,4 +1,5 @@
-import { computed, effect, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal, untracked } from '@angular/core';
+import { AuthService } from './auth.service';
 import { Cart, CartItem, Product } from './models';
 
 const STORAGE_KEY = 'skinet_cart_v2';
@@ -11,8 +12,9 @@ const COUPONS: Record<string, { label: string; percent?: number; flat?: number; 
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  readonly cart = signal<Cart>(this.restore());
-  readonly couponCode = signal<string | null>(this.cart().coupon);
+  private auth = inject(AuthService);
+
+  readonly cart = signal<Cart>({ items: [], coupon: null });
 
   readonly count = computed(() => this.cart().items.reduce((sum, item) => sum + item.quantity, 0));
   readonly subtotal = computed(() =>
@@ -38,14 +40,22 @@ export class CartService {
   );
 
   readonly coupon = computed(() => {
-    const code = this.couponCode();
+    const code = this.cart().coupon;
     return code && COUPONS[code] ? { code, ...COUPONS[code] } : null;
   });
 
   constructor() {
+    // A basket belongs to an account: switching user swaps it, signing out empties it.
     effect(() => {
+      const userId = this.auth.user()?.id ?? null;
+      untracked(() => this.cart.set(userId ? this.read(userId) : { items: [], coupon: null }));
+    });
+
+    effect(() => {
+      const userId = this.auth.user()?.id ?? null;
       const cart = this.cart();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+      if (!userId) return;
+      localStorage.setItem(this.key(userId), JSON.stringify(cart));
     });
   }
 
@@ -96,24 +106,25 @@ export class CartService {
   applyCoupon(code: string): boolean {
     const normalised = code.trim().toUpperCase();
     if (!COUPONS[normalised]) return false;
-    this.couponCode.set(normalised);
     this.cart.set({ ...this.cart(), coupon: normalised });
     return true;
   }
 
   clearCoupon() {
-    this.couponCode.set(null);
     this.cart.set({ ...this.cart(), coupon: null });
   }
 
   clear() {
     this.cart.set({ items: [], coupon: null });
-    this.couponCode.set(null);
   }
 
-  private restore(): Cart {
+  private key(userId: string): string {
+    return `${STORAGE_KEY}:${userId}`;
+  }
+
+  private read(userId: string): Cart {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = localStorage.getItem(this.key(userId));
       if (!raw) return { items: [], coupon: null };
       const parsed = JSON.parse(raw) as Cart;
       if (!Array.isArray(parsed.items)) return { items: [], coupon: null };

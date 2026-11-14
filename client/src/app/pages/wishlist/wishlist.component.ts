@@ -1,5 +1,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../core/auth.service';
 import { CatalogService } from '../../core/catalog.service';
 import { Product } from '../../core/models';
 import { WishlistService } from '../../core/wishlist.service';
@@ -19,7 +20,25 @@ import { ProductCardComponent } from '../../shared/product-card/product-card.com
 
       <h1 class="mb-5 text-2xl font-extrabold text-ink-900">Wishlist</h1>
 
-      @if (items().length === 0) {
+      @if (!auth.isLoggedIn()) {
+        <div class="overflow-hidden rounded-2xl border border-ink-100 bg-white">
+          <div class="grid gap-6 p-6 sm:grid-cols-[auto_1fr] sm:items-center sm:p-10">
+            <span class="grid h-16 w-16 place-items-center rounded-2xl bg-brand-50 text-brand-500">
+              <span class="material-icons text-[32px]">favorite_border</span>
+            </span>
+            <div>
+              <h2 class="text-lg font-bold text-ink-900">Sign in to see your wishlist</h2>
+              <p class="mt-1 max-w-lg text-sm text-ink-500">
+                Saved products are tied to your account, so your wishlist is waiting for you on any device.
+              </p>
+              <div class="mt-4 flex flex-wrap gap-2">
+                <a routerLink="/login" [queryParams]="{ returnUrl: '/wishlist' }" class="btn-primary">Sign in</a>
+                <a routerLink="/register" class="btn-outline">Create an account</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      } @else if (items().length === 0) {
         <div class="rounded-2xl border border-dashed border-ink-200 bg-white py-20 text-center">
           <span class="material-icons text-[56px] text-ink-300">favorite_border</span>
           <h2 class="mt-4 text-lg font-bold text-ink-900">Your wishlist is empty</h2>
@@ -39,6 +58,7 @@ import { ProductCardComponent } from '../../shared/product-card/product-card.com
 })
 export class WishlistComponent implements OnInit {
   private catalog = inject(CatalogService);
+  readonly auth = inject(AuthService);
   readonly wishlist = inject(WishlistService);
 
   private readonly all = signal<Product[]>([]);

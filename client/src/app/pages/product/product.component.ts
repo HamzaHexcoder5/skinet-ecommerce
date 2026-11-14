@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../core/auth.service';
 import { CartService } from '../../core/cart.service';
 import { CatalogService } from '../../core/catalog.service';
 import { Product } from '../../core/models';
@@ -18,6 +19,7 @@ export class ProductComponent implements OnInit {
   private router = inject(Router);
   private catalog = inject(CatalogService);
   private toast = inject(ToastService);
+  private auth = inject(AuthService);
   readonly cart = inject(CartService);
   readonly wishlist = inject(WishlistService);
 
@@ -70,6 +72,8 @@ export class ProductComponent implements OnInit {
   addToCart() {
     const product = this.product();
     if (!product) return;
+    if (!this.auth.requireLogin('Sign in to add items to your cart')) return;
+
     this.cart.add(product, this.quantity());
     this.toast.success(`${product.name} added to cart`);
   }
@@ -77,13 +81,21 @@ export class ProductComponent implements OnInit {
   buyNow() {
     const product = this.product();
     if (!product) return;
+    if (!this.auth.requireLogin('Sign in to buy this item')) return;
+
     this.cart.add(product, this.quantity());
     this.router.navigate(['/checkout']);
   }
 
   toggleWishlist() {
     const product = this.product();
-    if (product) this.wishlist.toggle(product.id);
+    if (!product) return;
+    if (!this.auth.requireLogin('Sign in to save products to your wishlist')) return;
+
+    this.wishlist.toggle(product.id);
+    this.toast.success(
+      this.wishlist.has(product.id) ? `${product.name} saved to wishlist` : `${product.name} removed from wishlist`
+    );
   }
 
   private loadRelated(product: Product) {

@@ -1,4 +1,4 @@
-<header class="sticky top-0 z-40 bg-white shadow-[0_1px_0_rgba(17,24,39,0.06)]">
+<header class="bg-white shadow-[0_1px_0_rgba(17,24,39,0.06)]">
   <!-- Utility strip -->
   <div class="hidden bg-ink-900 text-white md:block">
     <div class="page flex h-9 items-center justify-between text-[11px] font-medium">
@@ -33,33 +33,43 @@
         <img src="images/logo.png" alt="Skinet" class="h-9 w-auto sm:h-10" />
       </a>
 
-      <form class="hidden flex-1 md:block" (submit)="search($event)">
-        <div class="flex w-full items-stretch overflow-hidden rounded-lg border-2 border-brand-500">
-          <select
-            class="hidden max-w-[150px] cursor-pointer border-r border-ink-200 bg-ink-50 px-3 text-xs font-medium text-ink-600 outline-none lg:block"
-            [value]="scope()"
-            (change)="scope.set($any($event.target).value)"
-            aria-label="Search category"
-          >
-            <option value="all">All categories</option>
-            @for (category of categories(); track category.id) {
-              <option [value]="category.slug">{{ category.name }}</option>
-            }
-          </select>
-          <input
-            type="search"
-            class="min-w-0 flex-1 px-4 py-2.5 text-sm text-ink-900 outline-none placeholder:text-ink-400"
-            placeholder="Search for boards, boots, gloves and more"
-            [value]="term()"
-            (input)="term.set($any($event.target).value)"
-            aria-label="Search products"
-          />
-          <button type="submit" class="flex items-center gap-2 bg-brand-500 px-5 text-white transition hover:bg-brand-600">
-            <span class="material-icons text-[20px]">search</span>
-            <span class="hidden text-sm font-semibold lg:inline">Search</span>
-          </button>
-        </div>
-      </form>
+      <!-- Desktop search with live suggestions -->
+      <div class="relative hidden flex-1 md:block" data-search>
+        <form (submit)="search($event)">
+          <div class="flex w-full items-stretch rounded-lg border-2 border-brand-500 bg-white transition focus-within:ring-2 focus-within:ring-brand-100">
+            <div class="hidden h-full w-[150px] shrink-0 lg:block">
+              <app-select
+                class="h-full"
+                [options]="scopeOptions()"
+                [value]="scope()"
+                variant="search"
+                ariaLabel="Search category"
+                (valueChange)="setScope($event)"
+              />
+            </div>
+
+            <input
+              type="search"
+              class="min-w-0 flex-1 px-4 py-2.5 text-sm text-ink-900 outline-none placeholder:text-ink-400"
+              placeholder="Search for boards, boots, gloves and more"
+              [value]="term()"
+              (input)="onTerm($any($event.target).value)"
+              (focus)="suggestOpen.set(true)"
+              (keydown)="onSearchKey($event)"
+              autocomplete="off"
+              aria-label="Search products"
+              aria-autocomplete="list"
+            />
+
+            <button type="submit" class="flex items-center gap-2 rounded-r-[6px] bg-brand-500 px-5 text-white transition hover:bg-brand-600">
+              <span class="material-icons text-[20px]">search</span>
+              <span class="hidden text-sm font-semibold lg:inline">Search</span>
+            </button>
+          </div>
+        </form>
+
+        <ng-container *ngTemplateOutlet="suggestionsTpl" />
+      </div>
 
       <div class="ml-auto flex items-center gap-1 sm:gap-2">
         <a
@@ -120,12 +130,14 @@
           class="relative flex h-10 items-center gap-2 rounded-lg px-2 text-ink-600 transition hover:bg-ink-100"
           aria-label="Cart"
         >
-          <span class="material-icons">shopping_cart</span>
-          @if (cart.count() > 0) {
-            <span class="absolute -right-0.5 top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-brand-500 px-1 text-[10px] font-bold text-white">
-              {{ cart.count() }}
-            </span>
-          }
+          <span class="relative">
+            <span class="material-icons">shopping_cart</span>
+            @if (cart.count() > 0) {
+              <span class="absolute -right-2 -top-1.5 grid h-4 min-w-4 place-items-center rounded-full bg-brand-500 px-1 text-[10px] font-bold leading-none text-white">
+                {{ cart.count() }}
+              </span>
+            }
+          </span>
           <span class="hidden text-sm font-semibold lg:inline">Cart</span>
         </a>
       </div>
@@ -133,20 +145,24 @@
   </div>
 
   <!-- Mobile search -->
-  <div class="border-b border-ink-100 px-4 pb-3 md:hidden">
-    <form (submit)="search($event)" class="flex items-stretch overflow-hidden rounded-lg border-2 border-brand-500">
+  <div class="relative border-b border-ink-100 px-4 pb-3 md:hidden" data-search>
+    <form (submit)="search($event)" class="flex items-stretch overflow-hidden rounded-lg border-2 border-brand-500 bg-white">
       <input
         type="search"
         class="min-w-0 flex-1 px-3 py-2 text-sm outline-none placeholder:text-ink-400"
         placeholder="Search products"
         [value]="term()"
-        (input)="term.set($any($event.target).value)"
+        (input)="onTerm($any($event.target).value)"
+        (focus)="suggestOpen.set(true)"
+        (keydown)="onSearchKey($event)"
+        autocomplete="off"
         aria-label="Search products"
       />
       <button type="submit" class="bg-brand-500 px-4 text-white" aria-label="Search">
         <span class="material-icons text-[20px]">search</span>
       </button>
     </form>
+    <ng-container *ngTemplateOutlet="suggestionsTpl" />
   </div>
 
   <!-- Category nav -->
@@ -217,3 +233,89 @@
     </div>
   }
 </header>
+
+<ng-template #suggestionsTpl>
+  @if (suggestOpen()) {
+    <div class="absolute inset-x-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-ink-100 bg-white shadow-lift">
+      @if (term().trim().length === 0) {
+        <div class="p-3">
+          @if (recent().length > 0) {
+            <div class="flex items-center justify-between">
+              <p class="text-[11px] font-bold uppercase tracking-wide text-ink-400">Recent searches</p>
+              <button type="button" class="text-[11px] font-semibold text-ink-400 transition hover:text-brand-600" (click)="clearRecent()">Clear</button>
+            </div>
+            <div class="mt-2 flex flex-wrap gap-1.5">
+              @for (item of recent(); track item) {
+                <button type="button" class="filter-chip" (click)="useRecent(item)">
+                  <span class="material-icons text-[13px] text-ink-400">history</span>
+                  {{ item }}
+                </button>
+              }
+            </div>
+          } @else {
+            <p class="text-[11px] font-bold uppercase tracking-wide text-ink-400">Popular categories</p>
+            <div class="mt-2 flex flex-wrap gap-1.5">
+              @for (category of categories(); track category.id) {
+                <a
+                  [routerLink]="['/catalog']"
+                  [queryParams]="{ category: category.slug }"
+                  class="filter-chip"
+                  (click)="closeSearch()"
+                >
+                  <span class="material-icons text-[13px] text-ink-400">local_offer</span>
+                  {{ category.name }}
+                </a>
+              }
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="flex items-center justify-between border-b border-ink-100 px-3 py-2">
+          <p class="text-[11px] font-bold uppercase tracking-wide text-ink-400">Products</p>
+          @if (searching()) {
+            <span class="flex items-center gap-1 text-[11px] text-ink-400">
+              <span class="material-icons animate-spin text-[13px]">autorenew</span>
+              Searching
+            </span>
+          }
+        </div>
+
+        @if (suggestions().length === 0) {
+          <p class="px-3 py-6 text-center text-sm text-ink-500">
+            {{ searching() ? 'Looking for matches…' : 'No products match "' + term().trim() + '"' }}
+          </p>
+        } @else {
+          @for (product of suggestions(); track product.id; let i = $index) {
+            <button
+              type="button"
+              class="flex w-full items-center gap-3 px-3 py-2 text-left transition"
+              [class.bg-ink-50]="activeIndex() === i"
+              (mouseenter)="activeIndex.set(i)"
+              (click)="openProduct(product)"
+            >
+              <img
+                [src]="product.pictureUrl"
+                [alt]="product.name"
+                class="h-10 w-10 shrink-0 rounded-lg border border-ink-100 object-cover"
+              />
+              <span class="min-w-0 flex-1">
+                <span class="block truncate text-sm font-medium text-ink-800">{{ product.name }}</span>
+                <span class="block truncate text-[11px] text-ink-400">{{ product.brand }} · {{ product.type }}</span>
+              </span>
+              <span class="shrink-0 text-sm font-bold text-brand-600">${{ product.price.toFixed(2) }}</span>
+            </button>
+          }
+
+          <button
+            type="button"
+            class="flex w-full items-center justify-between gap-2 border-t border-ink-100 px-3 py-2.5 text-xs font-semibold text-brand-600 transition hover:bg-brand-50"
+            (click)="submitSearch()"
+          >
+            View all results for "{{ term().trim() }}"
+            <span class="material-icons text-[16px]">arrow_forward</span>
+          </button>
+        }
+      }
+    </div>
+  }
+</ng-template>

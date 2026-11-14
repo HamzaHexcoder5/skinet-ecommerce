@@ -25,6 +25,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Anchor jumps must not land underneath the sticky header. */
+    scroll-padding-top: var(--header-h, 150px);
   }
 
   body {
@@ -181,4 +183,22 @@
 
 @keyframes shimmer {
   100% { transform: translateX(100%); }
+}
+
+/* ------------------------------------------------------------------
+   Sticky columns
+
+   The header measures itself and publishes its height as --header-h.
+   Anything that should sit flush underneath it uses this class, so the
+   column never floats with an empty band above it while scrolling.
+   ------------------------------------------------------------------ */
+.sticky-under-header {
+  position: sticky;
+  top: var(--header-h, 150px);
+}
+
+@media (max-height: 720px) {
+  .sticky-under-header {
+    position: static;
+  }
 }

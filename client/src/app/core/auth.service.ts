@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal, untracked } from '@angular/core';
+import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Address, Order, User } from './models';
+import { ToastService } from './toast.service';
 
 export const SESSION_KEY = 'skinet_session_v2';
 const ORDERS_KEY = 'skinet_orders_v2';
@@ -15,6 +17,8 @@ export interface Session {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
+  private router = inject(Router);
+  private toast = inject(ToastService);
   private baseUrl = environment.apiUrl;
 
   readonly session = signal<Session | null>(this.restore());
@@ -22,7 +26,30 @@ export class AuthService {
   readonly token = computed(() => this.session()?.token ?? null);
   readonly isLoggedIn = computed(() => !!this.session());
   readonly isSeller = computed(() => this.session()?.user.role === 'seller');
-  readonly orders = signal<Order[]>(this.restoreOrders());
+  readonly orders = signal<Order[]>([]);
+
+  constructor() {
+    // Order history is stored per account so a shared browser never leaks it.
+    effect(() => {
+      const userId = this.user()?.id ?? null;
+      untracked(() => this.orders.set(userId ? this.readOrders(userId) : []));
+    });
+  }
+
+  /**
+   * Gate for actions that need an account (cart, wishlist, checkout).
+   * Sends guests to the sign-in page and brings them back afterwards.
+   */
+  requireLogin(message = 'Please sign in to continue'): boolean {
+    if (this.isLoggedIn()) return true;
+
+    this.toast.info(message);
+    const returnUrl = this.router.url;
+    this.router.navigate(['/login'], {
+      queryParams: returnUrl && returnUrl !== '/' ? { returnUrl } : {}
+    });
+    return false;
+  }
 
   login(email: string, password: string) {
     return this.http
@@ -82,7 +109,7 @@ export class AuthService {
       next: (orders) => {
         const merged = [...orders, ...this.orders().filter((local) => !orders.some((item) => item.id === local.id))];
         this.orders.set(merged);
-        localStorage.setItem(ORDERS_KEY, JSON.stringify(merged));
+        this.writeOrders(merged);
       },
       error: () => {
         /* keep the locally cached orders */
@@ -93,12 +120,22 @@ export class AuthService {
   private rememberOrder(order: Order) {
     const next = [order, ...this.orders().filter((item) => item.id !== order.id)];
     this.orders.set(next);
-    localStorage.setItem(ORDERS_KEY, JSON.stringify(next));
+    this.writeOrders(next);
   }
 
-  private restoreOrders(): Order[] {
+  private ordersKey(userId: string): string {
+    return `${ORDERS_KEY}:${userId}`;
+  }
+
+  private writeOrders(orders: Order[]) {
+    const userId = this.user()?.id;
+    if (!userId) return;
+    localStorage.setItem(this.ordersKey(userId), JSON.stringify(orders));
+  }
+
+  private readOrders(userId: string): Order[] {
     try {
-      const raw = localStorage.getItem(ORDERS_KEY);
+      const raw = localStorage.getItem(this.ordersKey(userId));
       const parsed = raw ? JSON.parse(raw) : [];
       return Array.isArray(parsed) ? parsed : [];
     } catch {

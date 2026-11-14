@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 import { ToastService } from '../../core/toast.service';
 
@@ -13,7 +13,10 @@ import { ToastService } from '../../core/toast.service';
 export class RegisterComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private toast = inject(ToastService);
+
+  readonly returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
 
   form = { firstName: '', lastName: '', email: '', password: '' };
   readonly loading = signal(false);
@@ -39,7 +42,7 @@ export class RegisterComponent {
         next: () => {
           this.loading.set(false);
           this.toast.success('Account created. Welcome to Skinet!');
-          this.router.navigateByUrl('/');
+          this.router.navigateByUrl(this.returnUrl ?? '/');
         },
         error: (error) => {
           this.loading.set(false);
