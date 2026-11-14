@@ -36,8 +36,8 @@
       <!-- Desktop search with live suggestions -->
       <div class="relative hidden flex-1 md:block" data-search>
         <form (submit)="search($event)">
-          <div class="flex w-full items-stretch rounded-lg border-2 border-brand-500 bg-white transition focus-within:ring-2 focus-within:ring-brand-100">
-            <div class="hidden h-full w-[150px] shrink-0 lg:block">
+          <div class="flex h-11 w-full items-stretch rounded-lg border-2 border-brand-500 bg-white transition focus-within:ring-2 focus-within:ring-brand-100">
+            <div class="hidden w-[150px] shrink-0 lg:block">
               <app-select
                 class="h-full"
                 [options]="scopeOptions()"
@@ -50,7 +50,7 @@
 
             <input
               type="search"
-              class="min-w-0 flex-1 px-4 py-2.5 text-sm text-ink-900 outline-none placeholder:text-ink-400"
+              class="h-full min-w-0 flex-1 px-4 text-sm text-ink-900 outline-none placeholder:text-ink-400"
               placeholder="Search for boards, boots, gloves and more"
               [value]="term()"
               (input)="onTerm($any($event.target).value)"

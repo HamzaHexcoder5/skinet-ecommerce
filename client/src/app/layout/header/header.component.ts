@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostListener, inject, signal, AfterViewInit } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { Subject, catchError, debounceTime, distinctUntilChanged, map, of, switchMap } from 'rxjs';
+import { Subject, catchError, debounceTime, map, of, switchMap } from 'rxjs';
 import { AuthService } from '../../core/auth.service';
 import { CartService } from '../../core/cart.service';
 import { CatalogService } from '../../core/catalog.service';
@@ -61,11 +61,12 @@ export class HeaderComponent implements AfterViewInit {
 
     this.term$
       .pipe(
-        debounceTime(200),
-        distinctUntilChanged(),
+        debounceTime(150),
         switchMap((term) => {
           const query = term.trim();
-          if (query.length < 2) {
+          // Even a single character should suggest something, like any
+          // production search box does.
+          if (!query) {
             this.searching.set(false);
             return of([] as Product[]);
           }
@@ -127,7 +128,9 @@ export class HeaderComponent implements AfterViewInit {
 
   openProduct(product: Product) {
     this.suggestOpen.set(false);
+    this.activeIndex.set(-1);
     this.term.set('');
+    this.term$.next('');
     this.router.navigate(['/product', product.id]);
   }
 
